@@ -59,7 +59,7 @@ export default function AdicionarOP() {
   const RenderStep = () => {
     return (
       <>
-{data.map(item => (
+        {data.map(item => (
           <View>
             <View style={styles.containerSteps2}>
               <View style={styles.containerItem}>

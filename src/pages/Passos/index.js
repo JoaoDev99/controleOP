@@ -38,7 +38,7 @@ export default function AdicionarOS() {
               onPress={() => {
                 remove();
               }}>
-              <Text>{item}</Text>
+              <Text style={styles.Text}>{item}</Text>
             </TouchableOpacity>
           );
         }}
@@ -57,7 +57,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Compra de Tecido</Text>
+            <Text style={styles.Text}>Compra de Tecido</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -66,7 +66,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Ordem de Compra</Text>
+            <Text style={styles.Text}>Ordem de Compra</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -75,7 +75,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Ordem de Corte</Text>
+            <Text style={styles.Text}>Ordem de Corte</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -84,14 +84,14 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Ordem de Costura</Text>
+            <Text style={styles.Text}>Ordem de Costura</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
             onPress={() => {
               steps.push('Vetorização'), console.log(steps), setClickStep(true);
             }}>
-            <Text>Vetorização</Text>
+            <Text style={styles.Text}>Vetorização</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -100,7 +100,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Envio de Imagem</Text>
+            <Text style={styles.Text}>Envio de Imagem</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -109,7 +109,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Ordem de Bordado</Text>
+            <Text style={styles.Text}>Ordem de Bordado</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -118,7 +118,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Confecção de Tela</Text>
+            <Text style={styles.Text}>Confecção de Tela</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.steps}
@@ -127,7 +127,7 @@ export default function AdicionarOS() {
                 console.log(steps),
                 setClickStep(true);
             }}>
-            <Text>Ordem de Estampa</Text>
+            <Text style={styles.Text}>Ordem de Estampa</Text>
           </TouchableOpacity>
         </View>
         {steps.length !== 0 ?
@@ -135,7 +135,7 @@ export default function AdicionarOS() {
           <RenderStep />
         </View> : <View></View>}
         <TouchableOpacity style={styles.textInput} onPress={() => navigation.navigate("AddCSV")}>
-        <Text>
+        <Text style={styles.Text}>
           Seguir
         </Text>
       </TouchableOpacity>
@@ -155,37 +155,18 @@ const styles = StyleSheet.create({
     paddingStart: 14,
     paddingTop: 14,
   },
-  containerDate: {
-    backgroundColor: '#FAFAFA',
-    paddingEnd: 14,
-    paddingStart: 14,
-    paddingTop: 10,
-    width: 200,
-  },
-  containerOs: {
-    borderWidth: 1,
-    borderColor: '#DFDFDF',
-    borderRadius: 2,
-    marginBottom: 14,
-    padding: 8,
-    paddingBottom: 14,
-    paddingTop: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
+
+  
   steps: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
     borderRadius: 10,
     marginBottom: 14,
-    marginLeft: 10,
+    marginLeft: 5,
+    marginRight: 5,
     padding: 8,
-    paddingBottom: 14,
-    paddingTop: 14,
-    width: 100,
     alignItems: 'center',
+    flexBasis: '30%'
   },
   stepsSelected: {
     borderWidth: 1,
@@ -194,8 +175,6 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     marginLeft: 10,
     padding: 8,
-    paddingBottom: 14,
-    paddingTop: 14,
     width: 100,
   },
   containerSteps: {
@@ -212,69 +191,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexWrap: 'wrap',
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#DFDFDF',
-    borderRadius: 2,
-    marginBottom: 14,
-    padding: 8,
-    paddingBottom: 14,
-    paddingTop: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    height: 50,
-    borderRadius: 5,
-  },
-  buttonDate: {},
-  containerAdd: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
+  Text: {
+    fontSize: 15,
     fontWeight: 'bold',
-    paddingBottom: 20,
-  },
-  title2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginRight: 20,
-    marginLeft: 20,
-  },
-  dot: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'red',
-    width: 20,
-    height: 20,
-    borderRadius: 12,
-    position: 'absolute',
-    zIndex: 99,
-    bottom: -2,
-    left: -4,
-  },
-  dotText: {
-    fontSize: 12,
-  },
-  dropdownSelector: {
-    width: '100%',
-    height: 50,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#DFDFDF',
-    alignSelf: 'center',
-    marginTop: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 15,
-    paddingRight: 15,
-    marginBottom: 15,
-  },
-  inputTitle: {
-    color: '#696969',
+    color: '#000',
   },
 });
