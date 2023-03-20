@@ -12,7 +12,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation} from '@react-navigation/native';
 
 const clients = [
   {name: 'Cineshow', id: '967'},
@@ -121,8 +121,6 @@ export default function AdicionarOP() {
         <Text style={styles.inputTitle}>Prazo:</Text>
         <TextInput style={styles.textInput} keyboardType="numeric" />
 
-        
-
         <Text style={styles.inputTitle}>Data inicial do pedido:</Text>
       </View>
       <View style={styles.containerDate}>
@@ -137,15 +135,19 @@ export default function AdicionarOP() {
           setOpen(false);
           setDate(date);
         }}
-        onCancel={() => { 
+        onCancel={() => {
           setOpen(false);
         }}
       />
-      <TouchableOpacity style={styles.textInput} onPress={() => navigation.navigate("Steps")}>
-        <Text>
-          Seguir
-        </Text>
-      </TouchableOpacity>
+
+      <View style={styles.containerBtn}>
+        <TouchableOpacity
+          style={styles.btnSeguir}
+          onPress={() => navigation.navigate('Steps')}>
+          <Text style={{color:'#FFF'}}>Seguir</Text>
+        </TouchableOpacity>
+      </View>
+
     </SafeAreaView>
   );
 }
@@ -173,6 +175,15 @@ const styles = StyleSheet.create({
     borderColor: '#DFDFDF',
     borderRadius: 2,
     marginBottom: 14,
+    padding: 8,
+    paddingBottom: 14,
+    paddingTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  containerBtn: {
     padding: 8,
     paddingBottom: 14,
     paddingTop: 14,
@@ -210,17 +221,31 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
-    borderRadius: 2,
+    borderRadius: 5,
+    marginTop: 10,
     marginBottom: 14,
     padding: 8,
-    paddingBottom: 14,
     paddingTop: 14,
+    paddingBottom: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
     height: 50,
+  },
+  btnSeguir: {
+    borderWidth: 1,
+    borderColor: '#168fff',
     borderRadius: 5,
+    marginBottom: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#168fff',
+    height: 50,
+    width: 100,
   },
   buttonDate: {},
   containerAdd: {

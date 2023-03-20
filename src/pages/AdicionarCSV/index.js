@@ -9,8 +9,8 @@ import {
   Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {writeFile, readFile, DownloadDirectoryPath} from 'react-native-fs';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {readFile} from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import XLSX from 'xlsx';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -19,7 +19,7 @@ export default function AdicionarOP() {
   const navigation = useNavigation();
   const [data, setData] = useState([]);
 
-  const importData = async () => {
+  const importData = async () => { 
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
@@ -40,7 +40,7 @@ export default function AdicionarOP() {
             valorTotal: item[6],
             prazo: item[7],
           }));
-          alert('Import data res -> ' + JSON.stringify(temp));
+           
           setData(temp);
         })
         .catch(e => {
@@ -59,7 +59,7 @@ export default function AdicionarOP() {
   const RenderStep = () => {
     return (
       <>
-{data.map(item => (
+{data !== null ? data.map(item => (
           <View>
             <View style={styles.containerSteps2}>
               <View style={styles.containerItem}>
@@ -120,7 +120,7 @@ export default function AdicionarOP() {
               </View>
             </View>
           </View>
-        ))}
+        )) : null}
       </>
     );
   };
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 14,
     paddingTop: 14,
-    backgroundColor: '#EAFEFF',
+    backgroundColor: '#AED8FF',
   },
   containerSteps2: {
     borderTopWidth: 1,
@@ -177,11 +177,9 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     marginTop: 10,
     alignItems: 'center',
-    backgroundColor: '#CAF9FC',
+    backgroundColor: '#6EB9FF',
   },
   textInput: {
-  
-    
     borderRadius: 5,
   },
   textInputDesc: {

@@ -1,15 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
-import { useNavigation } from "@react-navigation/native";
-
+import {useNavigation} from '@react-navigation/native';
 
 export default function AdicionarOS() {
   const navigation = useNavigation();
@@ -130,20 +123,24 @@ export default function AdicionarOS() {
             <Text style={styles.Text}>Ordem de Estampa</Text>
           </TouchableOpacity>
         </View>
-        {steps.length !== 0 ?
-        <View style={styles.containerSteps}>
-          <RenderStep />
-        </View> : <View></View>}
-        <TouchableOpacity style={styles.textInput} onPress={() => navigation.navigate("AddCSV")}>
-        <Text style={styles.Text}>
-          Seguir
-        </Text>
-      </TouchableOpacity>
+        {steps.length !== 0 ? (
+          <View style={styles.containerSteps}>
+            <RenderStep />
+          </View>
+        ) : (
+          <View></View>
+        )}
+
+        <View style={styles.containerBtn}>
+          <TouchableOpacity style={styles.btnSeguir} onPress={() => navigation.navigate("AddCSV")}>
+            <Text style={{color:'#FFF'}} >Seguir</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   containerBackground: {
     backgroundColor: '#FAFAFA',
@@ -155,8 +152,15 @@ const styles = StyleSheet.create({
     paddingStart: 14,
     paddingTop: 14,
   },
-
-  
+  containerBtn: {
+    padding: 8,
+    paddingBottom: 14,
+    paddingTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
   steps: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     padding: 8,
     alignItems: 'center',
-    flexBasis: '30%'
+    flexBasis: '30%',
   },
   stepsSelected: {
     borderWidth: 1,
@@ -195,5 +199,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
+  },
+  btnSeguir: {
+    borderWidth: 1,
+    borderColor: '#168fff',
+    borderRadius: 5,
+    marginBottom: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#168fff',
+    height: 50,
+    width: 100,
   },
 });

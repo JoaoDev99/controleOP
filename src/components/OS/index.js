@@ -1,6 +1,7 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 
 export default function Product({data, addToCart}) {
   return (
@@ -12,7 +13,7 @@ export default function Product({data, addToCart}) {
         <Text style={styles.price}>Quantidade: {data.qtd}</Text>
       </View>
 
-      <View style={styles.buttons}>
+{data.aberta == true ? <View style={styles.buttons}>
         <TouchableOpacity style={styles.buttonEdit} onPress={addToCart}>
           <Icon name="pencil" size={30} color={'#FFF'} />
         </TouchableOpacity>
@@ -20,7 +21,14 @@ export default function Product({data, addToCart}) {
         <TouchableOpacity style={styles.buttonConclusion} onPress={addToCart}>
           <Icon name="check" size={30} color={'#FFF'} />
         </TouchableOpacity>
-      </View>
+      </View> : <View style={styles.buttons}>
+        
+
+        <TouchableOpacity style={styles.buttonReOpen} onPress={addToCart}>
+          <Icon2 name="ios-arrow-undo" size={30} color={'#FFF'} />
+        </TouchableOpacity>
+      </View>}
+      
     </View>
   );
 }
@@ -55,6 +63,15 @@ const styles = StyleSheet.create({
     paddingStart: 12,
     paddingEnd: 12,
     backgroundColor: '#19C721',
+    paddingTop: 9,
+    paddingBottom: 9,
+    borderRadius: 2,
+    marginLeft: 10,
+  },
+  buttonReOpen: {
+    paddingStart: 12,
+    paddingEnd: 12,
+    backgroundColor: '#FF813D',
     paddingTop: 9,
     paddingBottom: 9,
     borderRadius: 2,
