@@ -116,7 +116,7 @@ export default function Home() {
         data={openOp}
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
-          <OS data={item} addToCart={() => {}} />
+          <OS data={item} addToCart={() => {}} /> 
         )}
       />
     </SafeAreaView>

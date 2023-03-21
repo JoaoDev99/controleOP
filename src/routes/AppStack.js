@@ -1,6 +1,12 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+import Home from '../pages/Home';
+import AddOP from '../pages/AdicionarOP';
+import Steps from '../pages/Passos';
+import AddCSV from '../pages/AdicionarCSV';
+import AddClient from '../pages/AdicionarClientes';
+
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
@@ -13,7 +19,7 @@ function MyDrawer() {
               backgroundColor: '#FAFAFA',
             },
           }} />
-      <Drawer.Screen name="Article" component={AddOP} />
+      <Drawer.Screen name="Clientes" component={AddClient} />
     </Drawer.Navigator>
   );
 }
@@ -34,7 +40,7 @@ function MyStack() {
           options={{
             title: 'Adicionar OP',
           }}
-        />
+        /> 
         <Stack.Screen
           name="Steps"
           component={Steps}
@@ -53,10 +59,6 @@ function MyStack() {
 )
 }
 
-import Home from '../pages/Home';
-import AddOP from '../pages/AdicionarOP';
-import Steps from '../pages/Passos';
-import AddCSV from '../pages/AdicionarCSV';
 
 const Stack = createNativeStackNavigator();
 

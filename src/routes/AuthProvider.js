@@ -34,6 +34,20 @@ export const AuthProvider = ({children}) => {
             console.log(e);
           }
         },
+
+        createClient: async ({nome,
+          cnpj,
+          contato,
+          email,}
+        ) => {
+          firestore().collection('clients').add({
+          nome: nome,
+          cnpj: cnpj,
+          contato: contato,
+          email: email,
+          });
+        },
+
       }}>
       {children}
     </AuthContext.Provider>

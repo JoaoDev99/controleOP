@@ -1,24 +1,28 @@
-import {useState, useContext, useRef, useEffect} from 'react';
+import {useState, useContext} from 'react';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
-  Alert,
   TouchableOpacity,
   Dimensions,
-  FlatList
+  FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {readFile} from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import XLSX from 'xlsx';
-import {ScrollView} from 'react-native-gesture-handler';
+import {AuthContext} from '../../routes/AuthProvider';
 
-export default function AdicionarOP() {
+export default function AdicionarClientes() {
+
+  const {createClient} = useContext(AuthContext);
+
   const navigation = useNavigation();
   const [data, setData] = useState([]);
+
+  const {width, height} = Dimensions.get('window');
 
   const importData = async () => {
     try {
@@ -32,14 +36,10 @@ export default function AdicionarOP() {
           const ws = wb.Sheets[wsname];
           const data = XLSX.utils.sheet_to_json(ws, {header: 1});
           const temp = data.map(item => ({
-            item: item[0],
-            descricao: item[1],
-            tamanho: item[2],
-            cor: item[3],
-            quantidade: item[4],
-            valorUnitario: item[5],
-            valorTotal: item[6],
-            prazo: item[7],
+            nome: item[2],
+            cnpj: item[7],
+            contato: item[12],
+            email: item[13],
           }));
 
           setData(temp);
@@ -57,72 +57,48 @@ export default function AdicionarOP() {
     }
   };
 
-  const RenderItem = ({item}) => (
-    <View>
-      <View style={styles.containerSteps2}>
-        <View style={styles.containerItem}>
-          <Text style={styles.TextId}>Id: </Text>
-          <Text style={styles.TextId}>{item.item}</Text>
+  const RenderStep = ({item}) => (
+    <>
+      <View>
+        <View style={styles.containerSteps2}>
+          <View style={styles.containerItem}>
+            <Text style={styles.TextId}>CNPJ: </Text>
+            <Text style={styles.TextId}>{item.cnpj}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.containerSteps}>
-        <View>
-          <Text style={styles.Text}>Descrição: </Text>
-          <TextInput
-            multiline={true}
-            numberOfLines={1}
-            style={styles.textInputDesc}>
-            {item.descricao}
-          </TextInput>
-        </View>
+        <View style={styles.containerSteps}>
+          <View>
+            <Text style={styles.Text}>Nome: </Text>
+            <TextInput style={styles.textInputCor}>{item.nome}</TextInput>
+          </View>
 
-        <View style={styles.containerItem}>
-          <View style={{flexBasis: '33.33%'}}>
-            <Text style={styles.Text}>Tamanho: </Text>
-            <TextInput style={styles.textInputTmn}>{item.tamanho}</TextInput>
-          </View>
-          <View style={{flexBasis: '33.33%'}}>
-            <Text style={styles.Text}>Quantidade: </Text>
-            <TextInput style={styles.textInputQtd}>{item.quantidade}</TextInput>
-          </View>
-          <View style={{flexBasis: '33.33%'}}>
-            <Text style={styles.Text}>Prazo: </Text>
-            <TextInput style={styles.textInputPrz}>{item.prazo}</TextInput>
-          </View>
-        </View>
-
-        <View>
-          <Text style={styles.Text}>Cor: </Text>
-          <TextInput style={styles.textInputCor}>{item.cor}</TextInput>
-        </View>
-
-        <View style={styles.containerItem}>
-          <View style={{flexBasis: '50%'}}>
-            <Text style={styles.Text}>Valor Unitário: </Text>
-            <TextInput style={styles.textInputVlr}>
-              {item.valorUnitario}
-            </TextInput>
-          </View>
-          <View style={{flexBasis: '50%'}}>
-            <Text style={styles.Text}>Valor Total: </Text>
-            <TextInput style={styles.textInputVlr}>{item.valorTotal}</TextInput>
+          <View style={styles.containerItem}>
+            <View>
+              <Text style={styles.Text}> Contato: </Text>
+              <TextInput style={styles.textInputCont}>{item.contato}</TextInput>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </>
   );
 
   return (
     <SafeAreaView style={styles.containerBackground}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.textInput} onPress={() => importData()}>
-          <Text style={styles.Text}>Adicionar</Text>
+        <TouchableOpacity style={styles.btnSeguir} onPress={() => importData()}>
+          <Text style={{color: '#FFF'}}>Adicionar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnSeguir}
+          onPress={() => createClient(data)}>
+          <Text style={{color: '#FFF'}}>Salvar</Text>
         </TouchableOpacity>
 
         <FlatList
           data={data}
           keyExtractor={(item, index) => String(index)}
-          renderItem={({item}) => <RenderItem item={item} />}
+          renderItem={({item}) => <RenderStep item={item} />}
           contentContainerStyle={{paddingBottom: 30}}
         />
       </View>
@@ -168,6 +144,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     backgroundColor: '#6EB9FF',
+  },
+  containerBtn: {
+    padding: 8,
+    paddingBottom: 14,
+    paddingTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   textInput: {
     borderRadius: 5,
@@ -219,7 +204,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#FFFFFF',
   },
-  textInputVlr: {
+  textInputCont: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
     borderRadius: 2,
@@ -227,7 +212,7 @@ const styles = StyleSheet.create({
     padding: 8,
     height: 50,
     borderRadius: 5,
-    width: Dimensions.get('window').width / 4,
+    width: Dimensions.get('window').width / 2.5,
     backgroundColor: '#FFFFFF',
   },
   textInputCor: {
@@ -242,7 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   TextId: {
-    fontSize: 30,
+    fontSize: 23,
     fontWeight: 'bold',
     color: '#000',
   },
@@ -250,5 +235,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
+  },
+  btnSeguir: {
+    borderWidth: 1,
+    borderColor: '#168fff',
+    borderRadius: 5,
+    marginBottom: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#168fff',
+    height: 50,
+    width: 100,
   },
 });
