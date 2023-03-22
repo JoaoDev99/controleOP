@@ -7,7 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
-  FlatList
+  FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -115,9 +115,14 @@ export default function AdicionarOP() {
   return (
     <SafeAreaView style={styles.containerBackground}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.textInput} onPress={() => importData()}>
-          <Text style={styles.Text}>Adicionar</Text>
-        </TouchableOpacity>
+
+        <View style={{flexDirection:"row"}}>
+          <TouchableOpacity
+            style={styles.btnSeguir}
+            onPress={() => importData()}>
+            <Text style={{color: '#FFF'}}>Adicionar</Text>
+          </TouchableOpacity>
+        </View>
 
         <FlatList
           data={data}
@@ -250,5 +255,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000',
+  },
+  btnSeguir: {
+    borderWidth: 1,
+    borderColor: '#168fff',
+    borderRadius: 5,
+    marginBottom: 14,
+    marginRight: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#168fff',
+    height: 50,
+    flexBasis: '30%'
   },
 });

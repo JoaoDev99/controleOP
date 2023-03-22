@@ -16,7 +16,6 @@ import XLSX from 'xlsx';
 import {AuthContext} from '../../routes/AuthProvider';
 
 export default function AdicionarClientes() {
-
   const {createClient} = useContext(AuthContext);
 
   const navigation = useNavigation();
@@ -86,14 +85,19 @@ export default function AdicionarClientes() {
   return (
     <SafeAreaView style={styles.containerBackground}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.btnSeguir} onPress={() => importData()}>
-          <Text style={{color: '#FFF'}}>Adicionar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btnSeguir}
-          onPress={() => createClient(data)}>
-          <Text style={{color: '#FFF'}}>Salvar</Text>
-        </TouchableOpacity>
+
+        <View style={{flexDirection:"row"}}>
+          <TouchableOpacity
+            style={styles.btnSeguir}
+            onPress={() => importData()}>
+            <Text style={{color: '#FFF'}}>Adicionar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btnSeguir}
+            onPress={() => createClient(data)}>
+            <Text style={{color: '#FFF'}}>Salvar</Text>
+          </TouchableOpacity>
+        </View>
 
         <FlatList
           data={data}
@@ -241,6 +245,7 @@ const styles = StyleSheet.create({
     borderColor: '#168fff',
     borderRadius: 5,
     marginBottom: 14,
+    marginRight: 14,
     padding: 8,
     paddingTop: 14,
     paddingBottom: 14,
@@ -249,6 +254,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#168fff',
     height: 50,
-    width: 100,
+    flexBasis: '30%'
   },
 });
