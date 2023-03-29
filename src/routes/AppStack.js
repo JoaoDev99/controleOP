@@ -12,6 +12,9 @@ import AddOP from '../pages/AdicionarOP';
 import Steps from '../pages/Passos';
 import AddCSV from '../pages/AdicionarCSV';
 import AddClient from '../pages/AdicionarClientes';
+import StockHome from '../pages/EstoqueHome';
+import Suppliers from '../pages/Fornecedores';
+
 import { useContext } from 'react';
 
 const Drawer = createDrawerNavigator();
@@ -67,6 +70,14 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen name="Clientes" component={AddClient} />
+      <Drawer.Screen name="EstoqueHome" component={StockHome} options={{
+          title: 'Estoque',
+          headerTitle: 'Estoque',
+        }} />
+      <Drawer.Screen name="Fornecedores" component={Suppliers} options={{
+          title: 'Fornecedores',
+          headerTitle: 'Fornecedores',
+        }} />
     </Drawer.Navigator>
   );
 }

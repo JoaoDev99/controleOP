@@ -1,5 +1,6 @@
 import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export const AuthContext = createContext();
 
@@ -35,10 +36,11 @@ export const AuthProvider = ({children}) => {
           }
         },
 
-        createClient: async ({nome,
+        createClient: async (
+          nome,
           cnpj,
           contato,
-          email,}
+          email
         ) => {
           firestore().collection('clients').add({
           nome: nome,

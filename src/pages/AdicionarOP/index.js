@@ -118,12 +118,12 @@ export default function AdicionarOP() {
         <Text style={styles.inputTitle}>Número do Pedido:</Text>
         <TextInput style={styles.textInput} keyboardType="numeric" />
 
-        <Text style={styles.inputTitle}>Prazo:</Text>
+        {/* <Text style={styles.inputTitle}>Prazo:</Text>
         <TextInput style={styles.textInput} keyboardType="numeric" />
 
-        <Text style={styles.inputTitle}>Data inicial do pedido:</Text>
+        <Text style={styles.inputTitle}>Data inicial do pedido:</Text> */}
       </View>
-      <View style={styles.containerDate}>
+      {/* <View style={styles.containerDate}>
         <Button title="Selecione a data" onPress={() => setOpen(true)} />
       </View>
       <DatePicker
@@ -138,7 +138,7 @@ export default function AdicionarOP() {
         onCancel={() => {
           setOpen(false);
         }}
-      />
+      /> */}
 
       <View style={styles.containerBtn}>
         <TouchableOpacity
