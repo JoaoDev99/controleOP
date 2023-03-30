@@ -1,48 +1,98 @@
-import {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   Dimensions,
-  Picker
+  TextInput,
 } from 'react-native';
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import OS from '../../components/OS';
-import Button from '../../components/ButtonPlus';
+import CheckBox from '@react-native-community/checkbox';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Fornecedores() {
   const {user} = useContext(AuthContext);
+  
+  const [fornecedor, setFornecedor] = useState("");
+  const [tecido, setTecido] = useState([]);
 
-  const MultPicker = () => {
-    const [selectedValue, setSelectedValue] = useState('default');
-    
+  function CheckboxExample() {
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const items = [
+      {id: 'Brim', label: 'Brim'},
+      {id: 'Malha', label: 'Malha'},
+      {id: 'Social', label: 'Social'}
+    ];
+
+    const handleToggleItem = item => {
+      const index = selectedItems.indexOf(item.id);
+
+      if (index >= 0) {
+        // Item já está selecionado, então remove do array
+        setSelectedItems(selectedItems.filter(id => id !== item.id));
+      } else {
+        // Item não está selecionado, então adiciona ao array
+        setSelectedItems([...selectedItems, item.id]);
+      }
+    };
+
     return (
-      <View>
-        <Text>Selecione uma opção:</Text>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={(itemValue) => setSelectedValue(itemValue)}
-          mode={'dropdown'}
-          multiple={true}
-        >
-          <Picker.Item label="Opção 1" value="opcao1" />
-          <Picker.Item label="Opção 2" value="opcao2" />
-          <Picker.Item label="Opção 3" value="opcao3" />
-          <Picker.Item label="Opção 4" value="opcao4" />
-        </Picker>
-        <Text>Opção selecionada: {selectedValue}</Text>
+      <View
+        style={{flexDirection: 'row', marginTop: 20, justifyContent: 'center'}}>
+        
+        {items.map(item => (
+          <View
+            key={item.id}
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              alignItems: 'center',
+              marginRight: Dimensions.get('window').width / 25,
+              marginLeft: Dimensions.get('window').width / 25,
+            }}>
+              <CheckBox
+                disabled={false}
+                value={selectedItems.indexOf(item.id) >= 0}
+                onValueChange={() => [
+                  handleToggleItem(item),
+                  console.log(tecido)
+                ]}
+                tintColors={{true: '', false: '#000'}}
+              />
+              <Text style={styles.textTitle}>{item.label}</Text>
+            </View>
+          
+        ))}
       </View>
     );
-  };
+  }
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Fornecedores</Text>
-        <MultPicker/>
+      <View>
+        <Text style={styles.textTitle}>Fornecedor:</Text>
+        <TextInput style={styles.textInput}
+         placeholder="Digite o nome do fornecedor"
+         placeholderTextColor="#C0C0C0"
+         autoCorrect={false}
+         color="#000"
+         onChangeText={fornecedor => setFornecedor(fornecedor)}
+       ></TextInput>
+      </View>
+      <Text style={styles.textTitle}>Tecido: </Text>
+      <CheckboxExample />
       
+
+      <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity style={styles.btnSeguir} onPress={() => importData()}>
+          <Text style={{color: '#FFF'}}>Adicionar</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -55,66 +105,44 @@ const styles = StyleSheet.create({
     paddingStart: 14,
     paddingTop: 14,
   },
-  containerOP: {
-    borderWidth: 2,
-    borderColor: '#999',
-    borderRadius: 1,
-    marginBottom: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    borderRadius: 5,
     marginTop: 10,
-  },
-  containerAdd: {
+    marginBottom: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  buttonOP1: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#222',
-    height: Dimensions.get('window').height / 9.99,
-    width: Dimensions.get('window').width / 2.23,
     justifyContent: 'center',
-    alignItems: 'center',
+    height: 50,
   },
-  buttonOP1F: {
-    fontSize: 24,
+  textTitle: {
+    fontSize: 17,
     fontWeight: 'bold',
-    backgroundColor: '#d9d9d9',
-    height: Dimensions.get('window').height / 9.99,
-    width: Dimensions.get('window').width / 2.2,
+    color: '#000',
+  },
+  text: {
+    fontSize: 17,
+    color: '#000',
+  },
+  btnSeguir: {
+    borderWidth: 1,
+    borderColor: '#168fff',
+    borderRadius: 5,
+    marginBottom: 14,
+    marginRight: 14,
+    padding: 8,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonOP2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#222',
-    height: Dimensions.get('window').height / 9.99,
-    width: Dimensions.get('window').width / 2.19,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonOP2F: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#d9d9d9',
-    height: Dimensions.get('window').height / 9.99,
-    width: Dimensions.get('window').width / 2.16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    paddingBottom: 20,
-    color: '#696969',
-  },
-  title2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#696969',
+    backgroundColor: '#168fff',
+    height: 50,
+    flexBasis: '30%',
+    marginTop: 20,
   },
 });

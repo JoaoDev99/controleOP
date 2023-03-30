@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
-  
+
   return (
     <AuthContext.Provider
       value={{
@@ -36,20 +36,23 @@ export const AuthProvider = ({children}) => {
           }
         },
 
-        createClient: async (
-          nome,
-          cnpj,
-          contato,
-          email
-        ) => {
+        createClient: async (nome, cnpj, contato, email) => {
           firestore().collection('clients').add({
-          nome: nome,
-          cnpj: cnpj,
-          contato: contato,
-          email: email,
+            nome: nome,
+            cnpj: cnpj,
+            contato: contato,
+            email: email,
           });
         },
 
+        createSupplier: async (nome, tecido) => {
+          firestore()
+            .collection('suppliers')
+            .add({
+              nome: nome,
+              tecido: [tecido],
+            });
+        },
       }}>
       {children}
     </AuthContext.Provider>

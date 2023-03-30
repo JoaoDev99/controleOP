@@ -10,14 +10,11 @@ import {
   FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {readFile} from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import XLSX from 'xlsx';
-import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AdicionarOP() {
-  const navigation = useNavigation();
   const [data, setData] = useState([]);
 
   const importData = async () => {
@@ -115,8 +112,7 @@ export default function AdicionarOP() {
   return (
     <SafeAreaView style={styles.containerBackground}>
       <View style={styles.container}>
-
-        <View style={{flexDirection:"row"}}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={styles.btnSeguir}
             onPress={() => importData()}>
@@ -270,6 +266,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#168fff',
     height: 50,
-    flexBasis: '30%'
+    flexBasis: '30%',
   },
 });
