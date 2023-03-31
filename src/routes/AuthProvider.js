@@ -47,10 +47,10 @@ export const AuthProvider = ({children}) => {
 
         createSupplier: async (nome, tecido) => {
           firestore()
-            .collection('suppliers')
+            .collection('fornecedores')
             .add({
               nome: nome,
-              tecido: [tecido],
+              tecido: tecido,
             });
         },
       }}>

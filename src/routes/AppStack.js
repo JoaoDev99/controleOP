@@ -9,11 +9,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from './AuthProvider';
 import Home from '../pages/Home';
 import AddOP from '../pages/AdicionarOP';
-import Steps from '../pages/Passos';
+import Passos from '../pages/Passos';
 import AddCSV from '../pages/AdicionarCSV';
-import AddClient from '../pages/AdicionarClientes';
-import StockHome from '../pages/EstoqueHome';
-import Suppliers from '../pages/Fornecedores';
+import AddClientes from '../pages/AdicionarClientes';
+import EstoqueHome from '../pages/EstoqueHome';
+import FornecedoresHome from '../pages/FornecedoresHome';
+import AddFornecedores from '../pages/AdicionarFornecedores';
 
 import { useContext } from 'react';
 
@@ -69,14 +70,15 @@ function MyDrawer() {
           headerTitle: '',
         }}
       />
-      <Drawer.Screen name="Clientes" component={AddClient} />
-      <Drawer.Screen name="EstoqueHome" component={StockHome} options={{
+      <Drawer.Screen name="Clientes" component={AddClientes} />
+      <Drawer.Screen name="EstoqueHome" component={EstoqueHome} options={{
           title: 'Estoque',
           headerTitle: 'Estoque',
         }} />
-      <Drawer.Screen name="Fornecedores" component={Suppliers} options={{
+      <Drawer.Screen name="Fornecedores" component={FornecedoresHome} options={{
           title: 'Fornecedores',
           headerTitle: 'Fornecedores',
+          
         }} />
     </Drawer.Navigator>
   );
@@ -100,8 +102,8 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="Steps"
-        component={Steps}
+        name="Passos"
+        component={Passos}
         options={{
           title: 'Passos',
         }}
@@ -111,6 +113,22 @@ function MyStack() {
         component={AddCSV}
         options={{
           title: 'Adicionar CSV',
+        }}
+      />
+      <Stack.Screen
+        name="FornecedoresHome"
+        component={FornecedoresHome}
+        options={{
+          headerShown: false,
+          
+        }}
+      />
+      <Stack.Screen
+        name="AddFornecedores"
+        component={AddFornecedores}
+        options={{
+          title: 'Adicionar Fornecedores',
+          headerShown: true,
         }}
       />
     </Stack.Navigator>
