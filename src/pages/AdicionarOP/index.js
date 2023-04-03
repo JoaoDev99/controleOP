@@ -29,7 +29,6 @@ export default function AdicionarOP() {
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState(clients);
   const [selectedClient, setSelectedClient] = useState('');
-
   const searchRef = useRef();
   const onSearch = search => {
     if (search !== '') {

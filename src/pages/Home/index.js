@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.containerAdd}>
-        <Text style={styles.title}>Ordens de Produção</Text>
+        <Text style={styles.title}>Adicionar nova ordem:</Text>
         <Button />
       </View>
 
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     paddingEnd: 14,
     paddingStart: 14,
-    paddingTop: 14,
   },
   containerOP: {
     borderWidth: 2,
@@ -145,11 +144,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
   },
   buttonOP1: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#222',
+    backgroundColor: '#168fff',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.23,
     justifyContent: 'center',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   buttonOP1F: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#d9d9d9',
+    backgroundColor: '#A6D4FF',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.2,
     justifyContent: 'center',
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   buttonOP2: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#222',
+    backgroundColor: '#168fff',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.19,
     justifyContent: 'center',
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   buttonOP2F: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#d9d9d9',
+    backgroundColor: '#A6D4FF',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.16,
     justifyContent: 'center',
@@ -185,12 +185,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    paddingBottom: 20,
-    color: '#696969',
+    color: '#333',
   },
   title2: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#696969',
+    color: '#333',
   },
 });

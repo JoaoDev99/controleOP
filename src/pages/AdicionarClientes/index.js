@@ -25,10 +25,10 @@ export default function AdicionarClientes() {
   const {width, height} = Dimensions.get('window');
 
   const handleClick = () => {
-    data.map((item) => {
-      createClient(item.nome, item.cnpj, item.contato, item.email)
-    })
-  }
+    data.map(item => {
+      createClient(item.nome, item.cnpj, item.contato, item.email);
+    });
+  };
 
   const importData = async () => {
     try {
@@ -48,7 +48,7 @@ export default function AdicionarClientes() {
             email: item[13],
           }));
 
-          setData(temp)
+          setData(temp);
           setList(temp);
         })
         .catch(e => {
@@ -76,10 +76,12 @@ export default function AdicionarClientes() {
         <View style={styles.containerSteps}>
           <View>
             <Text style={styles.Text}>Nome: </Text>
-            <TextInput style={styles.textInputCor}
-            value={data ? data.nome : ''}
-            onChangeText={txt => setList({...list, name: txt})}
-            ></TextInput>
+            <TextInput
+              style={styles.textInputCor}
+              value={data ? data.nome : ''}
+              onChangeText={txt => setList({...list, name: txt})}>
+              {item.nome}
+            </TextInput>
           </View>
 
           <View style={styles.containerItem}>
@@ -96,8 +98,7 @@ export default function AdicionarClientes() {
   return (
     <SafeAreaView style={styles.containerBackground}>
       <View style={styles.container}>
-
-        <View style={{flexDirection:"row"}}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={styles.btnSeguir}
             onPress={() => importData()}>
@@ -116,7 +117,6 @@ export default function AdicionarClientes() {
           renderItem={({item}) => <RenderStep item={item} />}
           contentContainerStyle={{paddingBottom: 30}}
         />
-
       </View>
     </SafeAreaView>
   );
@@ -266,6 +266,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#168fff',
     height: 50,
-    
   },
 });

@@ -1,4 +1,4 @@
-import {useState, useContext, useEffect} from 'react';
+import {useContext} from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,24 @@ import {
 } from 'react-native';
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import OS from '../../components/OS';
-import Button from '../../components/ButtonPlus';
+import {useNavigation} from '@react-navigation/native';
 
 export default function EstoqueHome() {
   const {user} = useContext(AuthContext);
-
-  const [btn1Clicked, setBtn1Clicked] = useState(false);
-  const [btn2Clicked, setBtn2Clicked] = useState(true);
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Tecidos</Text>
-        <Button />
+      
+        <TouchableOpacity style={styles.containerButtons}>
+          <Text style={styles.buttonTxt} onPress={() => navigation.navigate('EstoqueReferencias')}>PRODUTOS REFERÊNCIAS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.containerButtons2}>
+          <Text style={styles.buttonTxt}>ESTOQUE MATERIAIS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.containerButtons3}>
+          <Text style={styles.buttonTxt}>ESTOQUE PRODUTOS</Text>
+        </TouchableOpacity>
       
     </SafeAreaView>
   );
@@ -31,9 +36,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
-    paddingEnd: 14,
-    paddingStart: 14,
-    paddingTop: 14,
+  },
+  containerButtons: {
+    backgroundColor: '#BDEBFF',
+    borderColor: '#A8D8ED',
+    borderWidth: 0.5,
+    padding: 30,
+  },
+  containerButtons2: {
+    backgroundColor: '#A3E3FF',
+    borderColor: '#A8D8ED',
+    borderWidth: 0.5,
+    padding: 30,
+  },
+  containerButtons3: {
+    backgroundColor: '#8ADBFF',
+    borderColor: '#A8D8ED',
+    borderWidth: 0.5,
+    padding: 30,
   },
   textInput: {
     borderWidth: 1,
@@ -48,5 +68,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 50,
+  },
+  buttonTxt: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#444444',
   },
 });

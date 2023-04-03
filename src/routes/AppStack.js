@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/drawer';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AuthContext } from './AuthProvider';
+import {AuthContext} from './AuthProvider';
 import Home from '../pages/Home';
 import AddOP from '../pages/AdicionarOP';
 import Passos from '../pages/Passos';
@@ -14,9 +14,11 @@ import AddCSV from '../pages/AdicionarCSV';
 import AddClientes from '../pages/AdicionarClientes';
 import EstoqueHome from '../pages/EstoqueHome';
 import FornecedoresHome from '../pages/FornecedoresHome';
-import AddFornecedores from '../pages/AdicionarFornecedores';
+import AddFornecedores from '../pages/FornecedoresAdicionar';
+import EstoqueReferecias from '../pages/EstoqueReferencias';
 
-import { useContext } from 'react';
+
+import {useContext} from 'react';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,9 +38,10 @@ const CustomDrawer = props => {
           bottom: 10,
           backgroundColor: '#F6F6F6',
           padding: 20,
-        }} onPress={() => logout()}>
-        <View style={{flexDirection: 'row', alignContent:'center'}}>
-          <Text style={{fontSize: 14, flexBasis:'15%'}}>Sair</Text>
+        }}
+        onPress={() => logout()}>
+        <View style={{flexDirection: 'row', alignContent: 'center'}}>
+          <Text style={{fontSize: 14, flexBasis: '15%'}}>Sair</Text>
           <Icon name="logout" size={17} color={'#000'} />
         </View>
       </TouchableOpacity>
@@ -63,23 +66,38 @@ function MyDrawer() {
         component={Home}
         options={{
           title: 'Ordem de Produção',
-          headerTintColor: '#696969',
           headerStyle: {
             backgroundColor: '#FAFAFA',
           },
-          headerTitle: '',
         }}
       />
-      <Drawer.Screen name="Clientes" component={AddClientes} />
-      <Drawer.Screen name="EstoqueHome" component={EstoqueHome} options={{
+      <Drawer.Screen name="Clientes" component={AddClientes} options={{
+          headerStyle: {
+            backgroundColor: '#FAFAFA',
+          },
+        }}/>
+      <Drawer.Screen
+        name="EstoqueHome"
+        component={EstoqueHome}
+        options={{
           title: 'Estoque',
           headerTitle: 'Estoque',
-        }} />
-      <Drawer.Screen name="Fornecedores" component={FornecedoresHome} options={{
+          headerStyle: {
+            backgroundColor: '#FAFAFA',
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="Fornecedores"
+        component={FornecedoresHome}
+        options={{
           title: 'Fornecedores',
           headerTitle: 'Fornecedores',
-          
-        }} />
+          headerStyle: {
+            backgroundColor: '#FAFAFA',
+          },
+        }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -120,7 +138,6 @@ function MyStack() {
         component={FornecedoresHome}
         options={{
           headerShown: false,
-          
         }}
       />
       <Stack.Screen
@@ -128,6 +145,22 @@ function MyStack() {
         component={AddFornecedores}
         options={{
           title: 'Adicionar Fornecedores',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueHome"
+        component={EstoqueHome}
+        options={{
+          title: 'Estoque',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueReferencias"
+        component={EstoqueReferecias}
+        options={{
+          title: 'Referências',
           headerShown: true,
         }}
       />

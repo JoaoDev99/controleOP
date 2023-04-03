@@ -14,21 +14,6 @@ export default function ButtonPlus() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderColor: '#DFDFDF',
-    borderRadius: 2,
-    marginBottom: 14,
-    padding: 8,
-    paddingBottom: 14,
-    paddingTop: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontWeight: 'bold',
-  },
   buttonEdit: {
     paddingStart: 12,
     paddingEnd: 12,
@@ -37,10 +22,5 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     borderRadius: 2,
     marginLeft: 10,
-  },
-  buttons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-  },
+  }, 
 });

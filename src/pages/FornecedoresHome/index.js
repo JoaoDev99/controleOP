@@ -10,37 +10,47 @@ import {
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CheckBox from '@react-native-community/checkbox';
-import { useNavigation } from "@react-navigation/native";
-
+import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 export default function Fornecedores() {
   const {createSupplier} = useContext(AuthContext);
 
   const navigation = useNavigation();
 
-  const [fornecedor, setFornecedor] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
-  
-  
+  const [data, setData] = useState([]);
+
+  const getFornecedores = () => {
+    firestore()
+      .collection('fornecedores')
+      .get()
+      .then(querySnapshot => {
+        let d = [];
+        querySnapshot.forEach(documentSnapshot => {
+          const user = {
+            nome: documentSnapshot.data().nome,
+            tecido: documentSnapshot.data().tecido,
+          };
+          d.push(user);
+        });
+        console.log(d);
+        setData(d);
+      })
+      .catch(e => {
+        console.log('Erro, catch user' + e);
+      });
+  };
+
+  useEffect(() => {
+    getFornecedores();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <Text style={styles.textTitle}>Fornecedor:</Text>
-        <TextInput style={styles.textInput}
-         placeholder="Digite o nome do fornecedor"
-         placeholderTextColor="#C0C0C0"
-         autoCorrect={false}
-         color="#000"
-         onChangeText={fornecedor => setFornecedor(fornecedor)}
-       ></TextInput>
-      </View>
-      
-      <Text style={styles.textTitle}>Tecido: </Text>
-
-
       <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity style={styles.btnSeguir} onPress={() => navigation.navigate("AddFornecedores")}>
+        <TouchableOpacity
+          style={styles.btnSeguir}
+          onPress={() => navigation.navigate('AddFornecedores')}>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
       </View>

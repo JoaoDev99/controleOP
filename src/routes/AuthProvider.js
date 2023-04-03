@@ -53,6 +53,15 @@ export const AuthProvider = ({children}) => {
               tecido: tecido,
             });
         },
+
+        createColorRef: async (fornecedor, cor, codigo) => {
+          firestore().collection('corRef').add({
+            fornecedor: fornecedor,
+            cor: cor,
+            codigo: codigo
+          });
+        },
+        
       }}>
       {children}
     </AuthContext.Provider>
