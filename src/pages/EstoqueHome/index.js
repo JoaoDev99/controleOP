@@ -19,7 +19,7 @@ export default function EstoqueHome() {
     <SafeAreaView style={styles.container}>
       
         <TouchableOpacity style={styles.containerButtons}>
-          <Text style={styles.buttonTxt} onPress={() => navigation.navigate('EstoqueReferencias')}>PRODUTOS REFERÊNCIAS</Text>
+          <Text style={styles.buttonTxt} onPress={() => navigation.navigate('EstoqueReferencias')}>REFERÊNCIAS</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.containerButtons2}>
           <Text style={styles.buttonTxt}>ESTOQUE MATERIAIS</Text>
