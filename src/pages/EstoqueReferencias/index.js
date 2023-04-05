@@ -41,8 +41,10 @@ export default function EstoqueReferecias() {
   const [cor, setCor] = useState('');
   const [codigo, setCodigo] = useState('');
   const [Brim, setBrim] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [Malha, setMalha] = useState([]);
+  const [Social, setSocial] = useState([]);
 
+  const [selectedItems, setSelectedItems] = useState([]);
   function CheckboxRender() {
     const items = [
       {id: 'Brim', label: 'Brim'},
@@ -55,29 +57,33 @@ export default function EstoqueReferecias() {
 
       if (index >= 0) {
         // Item já está selecionado, então remove do array
-        setSelectedItems(selectedItems.filter(id => id !== item.id));
+        setSelectedItems(selectedItems.filter(id => id !== item.id)); 
       } else {
         // Item não está selecionado, então adiciona ao array
         setSelectedItems([...selectedItems, item.id]);
       }
+
+      {selectedItems == 'Brim' ? setCorData(Brim) : null}
+      {selectedItems == 'Malha' ? setCorData(Malha) : null}
+      {selectedItems == 'Social' ? setCorData(Social) : null}
     };
 
+    
+
     return (
-      <View style={{flexDirection: 'row',justifyContent: 'space-between', }}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         {items.map(item => (
           <View
             key={item.id}
             style={{
               marginTop: 10,
-              alignItems: 'center', 
-                      
+              alignItems: 'center',
             }}>
             <CheckBox
               disabled={false}
               value={selectedItems.indexOf(item.id) >= 0}
               onValueChange={() => [
                 handleToggleItem(item),
-                console.log(selectedItems),
               ]}
               tintColors={{true: '', false: '#000'}}
             />
@@ -117,7 +123,7 @@ export default function EstoqueReferecias() {
         });
         setData(d);
         setList(d);
-        console.log(d);
+        //console.log(d);
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -131,15 +137,23 @@ export default function EstoqueReferecias() {
       .get()
       .then(querySnapshot => {
         let d = [];
+        let a = 'Brim';
+        let b = 'Malha';
+        let c = 'Social';
         querySnapshot.forEach(documentSnapshot => {
           const cor = {
             cor: documentSnapshot.data().cor,
             codigo: documentSnapshot.data().codigo,
             fornecedor: documentSnapshot.data().fornecedor,
+            tecido: documentSnapshot.data().tecido,
           };
           d.push(cor);
         });
         setCorData(d);
+        setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
+        setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
+        setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
+        //console.log(Social);
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -206,9 +220,9 @@ export default function EstoqueReferecias() {
           {fornecedor == '' ? 'Empresa' : fornecedor}
         </Text>
         {clicked ? (
-          <Icon name="arrow-drop-up" size={30} color='#666' />
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} color='#666'/>
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked ? (
@@ -288,9 +302,9 @@ export default function EstoqueReferecias() {
             : selectedTipo}
         </Text>
         {clicked2 ? (
-          <Icon name="arrow-drop-up" size={30} color='#666'/>
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} color='#666'/>
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked2 ? (
@@ -349,9 +363,9 @@ export default function EstoqueReferecias() {
             : selectedTecido}
         </Text>
         {clicked3 ? (
-          <Icon name="arrow-drop-up" size={30} color='#666'/>
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} color='#666'/>
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked3 ? (
@@ -434,26 +448,18 @@ export default function EstoqueReferecias() {
       {btn1Clicked ? (
         RenderAddCor()
       ) : (
-        <View style={{borderWidth: 0.7, borderRadius: 3}}>
-          <View style={styles.containerTabela}>
-            <View style={styles.containerInternoCor}>
-              <Text style={styles.title}>Cor</Text>
-            </View>
-            <View style={styles.containerInternoCodigo}>
-              <Text style={styles.title}>Cod</Text>
-            </View>
-            <View style={styles.containerInternoFornecedor}>
-              <Text style={styles.title}>Fornecedor</Text>
+        <View>
+          <CheckboxRender />
+          
+            <View style={{height: Dimensions.get('window').width / 1}}>
+              <FlatList
+                data={corData}
+                keyExtractor={item => String(item.cor)}
+                renderItem={({item, index}) => <VisualizarCores data={item} />}
+              />
             </View>
           </View>
-          <View style={{height: Dimensions.get('window').width / 1.2}}>
-            <FlatList
-              data={corData}
-              keyExtractor={item => String(item.cor)}
-              renderItem={({item, index}) => <VisualizarCores data={item} />}
-            />
-          </View>
-        </View>
+       
       )}
     </View>
   );
@@ -461,9 +467,7 @@ export default function EstoqueReferecias() {
   return (
     <SafeAreaView style={styles.container}>
       <View>{RenderTipos()}</View>
-      {selectedTipo == 'Cores de Tecido'
-        ? RenderPageCor()
-        : null}
+      {selectedTipo == 'Cores de Tecido' ? RenderPageCor() : null}
       {selectedTipo == 'Característica' ? (
         <View>
           <Text style={{color: '#666'}}>Caracteristica</Text>

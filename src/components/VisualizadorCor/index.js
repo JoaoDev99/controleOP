@@ -1,21 +1,25 @@
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
-import {Button} from 'react-native-paper';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Ionicons';
 
 export default function Product({data}) {
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.containerInternoCor}>
-          <Text style={styles.title}>{data.cor}</Text>
-        </View>
-        <View style={styles.containerInternoCodigo}>
-          <Text style={styles.title}>{data.codigo}</Text>
-        </View>
-        <View style={styles.containerInternoFornecedor}>
-          <Text style={styles.title}>{data.fornecedor}</Text>
-        </View>
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.title}>
+          Cor: {data.cor}, {data.codigo}
+        </Text>
+        <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
+        <Text style={styles.title}>Tecido: {data.tecido} </Text>
+      </View>
+      <View style={styles.buttons}>
+        <TouchableOpacity style={styles.buttonConclusion}>
+          <Icon name="trash-o" size={30} color={'#FFF'} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -23,45 +27,22 @@ export default function Product({data}) {
 
 const styles = StyleSheet.create({
   container: {
+    borderWidth: 1,
+    borderColor: '#000',
+    padding: 8,
     flexDirection: 'row',
-  },
-  containerInternoCor: {
-    borderBottomWidth: 0.5,
-    borderTopWidth: 0.5,
-    padding: 10,
-    flexBasis: '30%',
-  },
-  containerInternoCodigo: {
-    borderWidth: 0.5,
-    padding: 10,
-    flexBasis: '20%',
-  },
-  containerInternoFornecedor: {
-    borderBottomWidth: 0.5,
-    borderTopWidth: 0.5,
-    padding: 10,
-    flexBasis: '50%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
-    fontWeight: 'bold',
-    color: '#696969',
+    fontSize: 17,
+    color: '#000',
   },
-  buttonEdit: {
+  buttonConclusion: {
     paddingStart: 12,
     paddingEnd: 12,
-    backgroundColor: '#168fff',
+    backgroundColor: '#FF4848',
     paddingTop: 9,
     paddingBottom: 9,
-    borderRadius: 2,
-    marginLeft: 10,
-  },
-  
-  buttons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-  },
-  title: {
-    color: '#696969',
   },
 });

@@ -13,22 +13,23 @@ export default function Product({data, addToCart}) {
         <Text style={styles.price}>Quantidade: {data.qtd}</Text>
       </View>
 
-{data.aberta == true ? <View style={styles.buttons}>
-        <TouchableOpacity style={styles.buttonEdit} onPress={addToCart}>
-          <Icon name="pencil" size={30} color={'#FFF'} />
-        </TouchableOpacity>
+      {data.aberta == true ? (
+        <View style={styles.buttons}>
+          <TouchableOpacity style={styles.buttonEdit} onPress={addToCart}>
+            <Icon name="pencil" size={30} color={'#FFF'} />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonConclusion} onPress={addToCart}>
-          <Icon name="check" size={30} color={'#FFF'} />
-        </TouchableOpacity>
-      </View> : <View style={styles.buttons}>
-        
-
-        <TouchableOpacity style={styles.buttonReOpen} onPress={addToCart}>
-          <Icon2 name="ios-arrow-undo" size={30} color={'#FFF'} />
-        </TouchableOpacity>
-      </View>}
-      
+          <TouchableOpacity style={styles.buttonConclusion} onPress={addToCart}>
+            <Icon name="check" size={30} color={'#FFF'} />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.buttons}>
+          <TouchableOpacity style={styles.buttonReOpen} onPress={addToCart}>
+            <Icon2 name="ios-arrow-undo" size={30} color={'#FFF'} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    color: '#696969'
+    color: '#696969',
   },
   buttonEdit: {
     paddingStart: 12,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
   },
-  price:{
-    color: '#696969'
-  }
+  price: {
+    color: '#696969',
+  },
 });
