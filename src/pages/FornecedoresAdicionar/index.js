@@ -37,31 +37,26 @@ export default function Fornecedores() {
     };
     
     return (
-      <View
-        style={{flexDirection: 'row', marginTop: 20, justifyContent: 'center'}}>
-        
+      <View style={{flexDirection: 'row',justifyContent: 'space-between', }}>
         {items.map(item => (
           <View
             key={item.id}
             style={{
-              flexDirection: 'row',
-              marginTop: 20,
-              alignItems: 'center',
-              marginRight: Dimensions.get('window').width / 25,
-              marginLeft: Dimensions.get('window').width / 25,
+              marginTop: 10,
+              alignItems: 'center', 
+                      
             }}>
-              <CheckBox
-                disabled={false}
-                value={selectedItems.indexOf(item.id) >= 0}
-                onValueChange={() => [
-                  handleToggleItem(item),
-                  console.log(selectedItems)
-                ]}
-                tintColors={{true: '', false: '#000'}}
-              />
-              <Text style={styles.textTitle}>{item.label}</Text>
-            </View>
-          
+            <CheckBox
+              disabled={false}
+              value={selectedItems.indexOf(item.id) >= 0}
+              onValueChange={() => [
+                handleToggleItem(item),
+                console.log(selectedItems),
+              ]}
+              tintColors={{true: '', false: '#000'}}
+            />
+            <Text style={styles.inputTitle2}>{item.label}</Text>
+          </View>
         ))}
       </View>
     );

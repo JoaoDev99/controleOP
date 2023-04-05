@@ -54,11 +54,12 @@ export const AuthProvider = ({children}) => {
             });
         },
 
-        createColorRef: async (fornecedor, cor, codigo) => {
+        createColorRef: async (fornecedor, cor, codigo, tecido) => {
           firestore().collection('corRef').add({
             fornecedor: fornecedor,
             cor: cor,
-            codigo: codigo
+            codigo: codigo,
+            tecido: tecido,
           });
         },
         

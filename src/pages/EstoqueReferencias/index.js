@@ -13,8 +13,13 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorCor';
+import CheckBox from '@react-native-community/checkbox';
 
-const tipos = [{nome: 'Cores de Tecido'}, {nome: 'Característica'}, {nome: 'Peso'}];
+const tipos = [
+  {nome: 'Cores de Tecido'},
+  {nome: 'Característica'},
+  {nome: 'Peso'},
+];
 const tecidos = [{nome: 'Brim'}, {nome: 'Malha'}, {nome: 'Social'}];
 
 export default function EstoqueReferecias() {
@@ -26,9 +31,62 @@ export default function EstoqueReferecias() {
   const [corData, setCorData] = useState([]);
   const [btn1Clicked, setBtn1Clicked] = useState(false);
   const [btn2Clicked, setBtn2Clicked] = useState(true);
+  const [clicked2, setClicked2] = useState(false);
+  const [data2, setData2] = useState(tipos);
+  const [selectedTipo, setSelectedTipo] = useState('');
+  const [clicked3, setClicked3] = useState(false);
+  const [data3, setData3] = useState(tecidos);
+  const [selectedTecido, setSelectedTecido] = useState('');
   const [fornecedor, setFornecedor] = useState('');
   const [cor, setCor] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [Brim, setBrim] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  function CheckboxRender() {
+    const items = [
+      {id: 'Brim', label: 'Brim'},
+      {id: 'Malha', label: 'Malha'},
+      {id: 'Social', label: 'Social'},
+    ];
+
+    const handleToggleItem = item => {
+      const index = selectedItems.indexOf(item.id);
+
+      if (index >= 0) {
+        // Item já está selecionado, então remove do array
+        setSelectedItems(selectedItems.filter(id => id !== item.id));
+      } else {
+        // Item não está selecionado, então adiciona ao array
+        setSelectedItems([...selectedItems, item.id]);
+      }
+    };
+
+    return (
+      <View style={{flexDirection: 'row',justifyContent: 'space-between', }}>
+        {items.map(item => (
+          <View
+            key={item.id}
+            style={{
+              marginTop: 10,
+              alignItems: 'center', 
+                      
+            }}>
+            <CheckBox
+              disabled={false}
+              value={selectedItems.indexOf(item.id) >= 0}
+              onValueChange={() => [
+                handleToggleItem(item),
+                console.log(selectedItems),
+              ]}
+              tintColors={{true: '', false: '#000'}}
+            />
+            <Text style={styles.inputTitle2}>{item.label}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  }
 
   const searchRef = useRef();
   const onSearch = search => {
@@ -42,14 +100,6 @@ export default function EstoqueReferecias() {
     }
   };
 
-  const [clicked2, setClicked2] = useState(false);
-  const [data2, setData2] = useState(tipos);
-  const [selectedTipo, setSelectedTipo] = useState('');
-
-  const [clicked3, setClicked3] = useState(false);
-  const [data3, setData3] = useState(tecidos);
-  const [selectedTecido, setSelectedTecido] = useState('');
-
   const getFornecedores = () => {
     firestore()
       .collection('fornecedores')
@@ -57,9 +107,11 @@ export default function EstoqueReferecias() {
       .get()
       .then(querySnapshot => {
         let d = [];
+        let a = 'Brim';
         querySnapshot.forEach(documentSnapshot => {
           const fornecedor = {
             nome: documentSnapshot.data().nome,
+            tecido: documentSnapshot.data().tecido,
           };
           d.push(fornecedor);
         });
@@ -87,7 +139,6 @@ export default function EstoqueReferecias() {
           };
           d.push(cor);
         });
-        console.log(d);
         setCorData(d);
       })
       .catch(e => {
@@ -127,10 +178,16 @@ export default function EstoqueReferecias() {
           />
         </View>
       </View>
+      <View style={{marginTop: 10}}>
+        <Text style={styles.inputTitle}>Tecido:</Text>
+        <CheckboxRender />
+      </View>
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.btnSeguir}
-          onPress={() => createColorRef(fornecedor, cor, codigo)}>
+          onPress={() =>
+            createColorRef(fornecedor, cor, codigo, selectedItems)
+          }>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
       </View>
@@ -149,9 +206,9 @@ export default function EstoqueReferecias() {
           {fornecedor == '' ? 'Empresa' : fornecedor}
         </Text>
         {clicked ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color='#666' />
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color='#666'/>
         )}
       </TouchableOpacity>
       {clicked ? (
@@ -226,12 +283,14 @@ export default function EstoqueReferecias() {
           setClicked2(!clicked2);
         }}>
         <Text style={{color: '#666'}}>
-          {selectedTipo == '' ? 'Selecione o que deseja gerenciar:' : selectedTipo}
+          {selectedTipo == ''
+            ? 'Selecione o que deseja gerenciar:'
+            : selectedTipo}
         </Text>
         {clicked2 ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color='#666'/>
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color='#666'/>
         )}
       </TouchableOpacity>
       {clicked2 ? (
@@ -285,12 +344,14 @@ export default function EstoqueReferecias() {
           setClicked3(!clicked3);
         }}>
         <Text style={{color: '#666'}}>
-          {selectedTecido == '' ? 'Selecione o tipo de tecido:' : selectedTecido}
+          {selectedTecido == ''
+            ? 'Selecione o tipo de tecido:'
+            : selectedTecido}
         </Text>
         {clicked3 ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color='#666'/>
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color='#666'/>
         )}
       </TouchableOpacity>
       {clicked3 ? (
@@ -399,8 +460,10 @@ export default function EstoqueReferecias() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>{RenderTipos()}{RenderItem3()}</View>
-      {selectedTipo == 'Cores de Tecido' ? RenderPageCor() : null}
+      <View>{RenderTipos()}</View>
+      {selectedTipo == 'Cores de Tecido'
+        ? RenderPageCor()
+        : null}
       {selectedTipo == 'Característica' ? (
         <View>
           <Text style={{color: '#666'}}>Caracteristica</Text>
@@ -547,17 +610,21 @@ const styles = StyleSheet.create({
     color: '#696969',
     fontSize: 15,
   },
+  inputTitle2: {
+    color: '#696969',
+    fontSize: 15,
+  },
   title2: {
     fontSize: 24,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     color: '#FFF',
-    elevation: 10
+    elevation: 10,
   },
   title3: {
     fontSize: 24,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     color: '#000',
-    elevation: 10
+    elevation: 10,
   },
   buttonOP1: {
     fontSize: 24,
