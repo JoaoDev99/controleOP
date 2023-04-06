@@ -14,13 +14,19 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorCor';
 import CheckBox from '@react-native-community/checkbox';
+import {useFocusEffect} from '@react-navigation/native';
 
 const tipos = [
   {nome: 'Cores de Tecido'},
   {nome: 'Característica'},
   {nome: 'Peso'},
 ];
-const tecidos = [{nome: 'Brim'}, {nome: 'Malha'}, {nome: 'Social'}];
+const tecidos = [
+  {nome: 'Todos'},
+  {nome: 'Brim'},
+  {nome: 'Malha'},
+  {nome: 'Social'},
+];
 
 export default function EstoqueReferecias() {
   const {createColorRef} = useContext(AuthContext);
@@ -28,7 +34,6 @@ export default function EstoqueReferecias() {
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
-  const [corData, setCorData] = useState([]);
   const [btn1Clicked, setBtn1Clicked] = useState(false);
   const [btn2Clicked, setBtn2Clicked] = useState(true);
   const [clicked2, setClicked2] = useState(false);
@@ -40,9 +45,11 @@ export default function EstoqueReferecias() {
   const [fornecedor, setFornecedor] = useState('');
   const [cor, setCor] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [corData, setCorData] = useState([]);
   const [Brim, setBrim] = useState([]);
   const [Malha, setMalha] = useState([]);
   const [Social, setSocial] = useState([]);
+  const [Todos, setTodos] = useState([]);
 
   const [selectedItems, setSelectedItems] = useState([]);
   function CheckboxRender() {
@@ -57,18 +64,12 @@ export default function EstoqueReferecias() {
 
       if (index >= 0) {
         // Item já está selecionado, então remove do array
-        setSelectedItems(selectedItems.filter(id => id !== item.id)); 
+        setSelectedItems(selectedItems.filter(id => id !== item.id));
       } else {
         // Item não está selecionado, então adiciona ao array
         setSelectedItems([...selectedItems, item.id]);
       }
-
-      {selectedItems == 'Brim' ? setCorData(Brim) : null}
-      {selectedItems == 'Malha' ? setCorData(Malha) : null}
-      {selectedItems == 'Social' ? setCorData(Social) : null}
     };
-
-    
 
     return (
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -82,9 +83,7 @@ export default function EstoqueReferecias() {
             <CheckBox
               disabled={false}
               value={selectedItems.indexOf(item.id) >= 0}
-              onValueChange={() => [
-                handleToggleItem(item),
-              ]}
+              onValueChange={() => [handleToggleItem(item)]}
               tintColors={{true: '', false: '#000'}}
             />
             <Text style={styles.inputTitle2}>{item.label}</Text>
@@ -131,37 +130,45 @@ export default function EstoqueReferecias() {
   };
 
   const getCores = () => {
-    firestore()
+
+    const unsubscribe = firestore()
       .collection('corRef')
       .orderBy('cor', 'asc')
-      .get()
-      .then(querySnapshot => {
-        let d = [];
-        let a = 'Brim';
-        let b = 'Malha';
-        let c = 'Social';
-        querySnapshot.forEach(documentSnapshot => {
-          const cor = {
-            cor: documentSnapshot.data().cor,
-            codigo: documentSnapshot.data().codigo,
-            fornecedor: documentSnapshot.data().fornecedor,
-            tecido: documentSnapshot.data().tecido,
-          };
-          d.push(cor);
-        });
-        setCorData(d);
-        setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
-        setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
-        setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
-        //console.log(Social);
-      })
-      .catch(e => {
-        console.log('Erro, catch user' + e);
-      });
+      .onSnapshot(
+        querySnapshot => {
+          let d = [];
+          let a = 'Brim';
+          let b = 'Malha';
+          let c = 'Social';
+          querySnapshot.forEach(documentSnapshot => {
+            const cor = {
+              id: documentSnapshot.id,
+              cor: documentSnapshot.data().cor,
+              codigo: documentSnapshot.data().codigo,
+              fornecedor: documentSnapshot.data().fornecedor,
+              tecido: documentSnapshot.data().tecido,
+            };
+            d.push(cor);
+          });
+          setTodos(d);
+          setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
+          setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
+          setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
+          console.log(d);
+        },
+        error => {
+          console.log('Erro, catch user' + error);
+        },
+      );
+
+    return unsubscribe;
   };
 
   useEffect(() => {
-    getFornecedores(), getCores();
+    const unsubscribe = getCores();
+    return () => {
+      unsubscribe();
+    }, getFornecedores();
   }, []);
 
   const RenderAddCor = () => (
@@ -410,6 +417,24 @@ export default function EstoqueReferecias() {
     </View>
   );
 
+  const updateCorData = () => {
+    if (selectedTecido === 'Brim') {
+      setCorData(Brim);
+    } else if (selectedTecido === 'Malha') {
+      setCorData(Malha);
+    } else if (selectedTecido === 'Social') {
+      setCorData(Social);
+    } else if (selectedTecido === 'Todos') {
+      setCorData(Todos);
+    } else {
+      setCorData([]); // Caso nenhum valor de tecido seja selecionado, limpe o estado corData
+    }
+  };
+
+  useEffect(() => {
+    updateCorData();
+  }, [selectedTecido]);
+
   const RenderPageCor = () => (
     <View>
       <View style={styles.containerOP}>
@@ -449,17 +474,17 @@ export default function EstoqueReferecias() {
         RenderAddCor()
       ) : (
         <View>
-          <CheckboxRender />
-          
-            <View style={{height: Dimensions.get('window').width / 1}}>
-              <FlatList
-                data={corData}
-                keyExtractor={item => String(item.cor)}
-                renderItem={({item, index}) => <VisualizarCores data={item} />}
-              />
-            </View>
+          <RenderItem3 />
+
+          <View style={{height: Dimensions.get('window').width / 1}}>
+            
+            <FlatList
+              data={corData}
+              keyExtractor={item => item.id}
+              renderItem={({item, index}) => <VisualizarCores data={item}/>}
+            />
           </View>
-       
+        </View>
       )}
     </View>
   );

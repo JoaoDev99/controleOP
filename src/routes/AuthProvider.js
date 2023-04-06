@@ -62,6 +62,10 @@ export const AuthProvider = ({children}) => {
             tecido: tecido,
           });
         },
+
+        removeColorRef: async (id) => {
+          firestore().collection('corRef').doc(id).delete();
+        },
         
       }}>
       {children}

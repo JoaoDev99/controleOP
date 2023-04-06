@@ -1,3 +1,4 @@
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -5,8 +6,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from '../../routes/AuthProvider';
 
-export default function Product({data}) {
+export default function Product({data, onPress}) {
+
+  const {removeColorRef} = useContext(AuthContext);
+
+
+  if (!Array.isArray(data.tecido)) {
+    return null; // ou algum valor padrão ou uma mensagem de erro, caso necessário
+  }
+
   return (
     <View style={styles.container}>
       <View>
@@ -14,10 +24,10 @@ export default function Product({data}) {
           Cor: {data.cor}, {data.codigo}
         </Text>
         <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
-        <Text style={styles.title}>Tecido: {data.tecido} </Text>
+        <Text style={styles.title}>Tecido: {data.tecido.join(', ')}. </Text>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity style={styles.buttonConclusion}>
+        <TouchableOpacity style={styles.buttonConclusion} onPress={() => removeColorRef(data.id)}>
           <Icon name="trash-o" size={30} color={'#FFF'} />
         </TouchableOpacity>
       </View>
