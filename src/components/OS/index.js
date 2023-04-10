@@ -52,31 +52,29 @@ const styles = StyleSheet.create({
     color: '#696969',
   },
   buttonEdit: {
+    backgroundColor: '#168fff',
     paddingStart: 12,
     paddingEnd: 12,
-    backgroundColor: '#168fff',
     paddingTop: 9,
     paddingBottom: 9,
-    borderRadius: 2,
-    marginLeft: 10,
+    borderRadius: 5
   },
   buttonConclusion: {
-    paddingStart: 12,
-    paddingEnd: 12,
     backgroundColor: '#19C721',
+    paddingStart: 10,
+    paddingEnd: 10,
     paddingTop: 9,
     paddingBottom: 9,
-    borderRadius: 2,
+    borderRadius: 5,
     marginLeft: 10,
   },
   buttonReOpen: {
+    backgroundColor: '#FF813D',
     paddingStart: 12,
     paddingEnd: 12,
-    backgroundColor: '#FF813D',
     paddingTop: 9,
     paddingBottom: 9,
-    borderRadius: 2,
-    marginLeft: 10,
+    borderRadius: 5
   },
   buttons: {
     flexDirection: 'row',

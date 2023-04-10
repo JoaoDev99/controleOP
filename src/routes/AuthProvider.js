@@ -67,6 +67,10 @@ export const AuthProvider = ({children}) => {
           firestore().collection('corRef').doc(id).delete();
         },
         
+        removeSupplier: async (id) => {
+          firestore().collection('fornecedores').doc(id).delete();
+        },
+
       }}>
       {children}
     </AuthContext.Provider>

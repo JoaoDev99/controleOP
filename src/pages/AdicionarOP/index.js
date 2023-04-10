@@ -142,11 +142,10 @@ export default function AdicionarOP() {
       <View style={styles.containerBtn}>
         <TouchableOpacity
           style={styles.btnSeguir}
-          onPress={() => navigation.navigate('Steps')}>
-          <Text style={{color:'#FFF'}}>Seguir</Text>
+          onPress={() => navigation.navigate('Passos')}>
+          <Text style={{color: '#FFF'}}>Seguir</Text>
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }

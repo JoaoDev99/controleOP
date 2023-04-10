@@ -14,7 +14,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorCor';
 import CheckBox from '@react-native-community/checkbox';
-import {useFocusEffect} from '@react-navigation/native';
 
 const tipos = [
   {nome: 'Cores de Tecido'},
@@ -50,6 +49,8 @@ export default function EstoqueReferecias() {
   const [Malha, setMalha] = useState([]);
   const [Social, setSocial] = useState([]);
   const [Todos, setTodos] = useState([]);
+  const [outroTecido, setOutroTecido] = useState([]);
+  const [isOutrosChecked, setIsOutrosChecked] = useState(false);
 
   const [selectedItems, setSelectedItems] = useState([]);
   function CheckboxRender() {
@@ -63,10 +64,8 @@ export default function EstoqueReferecias() {
       const index = selectedItems.indexOf(item.id);
 
       if (index >= 0) {
-        // Item já está selecionado, então remove do array
         setSelectedItems(selectedItems.filter(id => id !== item.id));
       } else {
-        // Item não está selecionado, então adiciona ao array
         setSelectedItems([...selectedItems, item.id]);
       }
     };
@@ -89,6 +88,31 @@ export default function EstoqueReferecias() {
             <Text style={styles.inputTitle2}>{item.label}</Text>
           </View>
         ))}
+        <CheckboxOutroRender />
+      </View>
+    );
+  }
+
+  function CheckboxOutroRender() {
+    const handleCheckBoxChange = newValue => {
+      // Lógica para lidar com a alteração de valor do checkbox
+      setIsOutrosChecked(newValue);
+    };
+
+    return (
+      <View
+        style={{
+          marginTop: 10,
+          alignItems: 'center',
+        }}>
+        <CheckBox
+          value={isOutrosChecked}
+          onValueChange={handleCheckBoxChange}
+          tintColors={{true: '', false: '#000'}}
+        />
+        <Text style={styles.inputTitle2}>
+          {isOutrosChecked ? 'Outros' : 'Outros'}
+        </Text>
       </View>
     );
   }
@@ -122,7 +146,7 @@ export default function EstoqueReferecias() {
         });
         setData(d);
         setList(d);
-        //console.log(d);
+        console.log('Buscou2');
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -130,7 +154,6 @@ export default function EstoqueReferecias() {
   };
 
   const getCores = () => {
-
     const unsubscribe = firestore()
       .collection('corRef')
       .orderBy('cor', 'asc')
@@ -154,7 +177,7 @@ export default function EstoqueReferecias() {
           setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
           setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
           setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
-          console.log(d);
+          console.log('Buscou')
         },
         error => {
           console.log('Erro, catch user' + error);
@@ -166,9 +189,15 @@ export default function EstoqueReferecias() {
 
   useEffect(() => {
     const unsubscribe = getCores();
-    return () => {
-      unsubscribe();
-    }, getFornecedores();
+    return (
+      () => {
+        unsubscribe();
+      } 
+    );
+  }, []);
+
+  useEffect(() =>{
+getFornecedores();
   }, []);
 
   const RenderAddCor = () => (
@@ -203,12 +232,33 @@ export default function EstoqueReferecias() {
         <Text style={styles.inputTitle}>Tecido:</Text>
         <CheckboxRender />
       </View>
+
+      {isOutrosChecked ? (
+        <View>
+          <TextInput
+            style={styles.textInputCor}
+            placeholder="Digite o tecido"
+            placeholderTextColor="#C0C0C0"
+            autoCorrect={false}
+            //onChangeText={tecido => setOutro(tecido)}
+            //value={10}
+          />
+        </View>
+      ) : null}
+
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.btnSeguir}
-          onPress={() =>
-            createColorRef(fornecedor, cor, codigo, selectedItems)
-          }>
+          onPress={() => [
+            createColorRef(fornecedor, cor, codigo, selectedItems),
+            setBtn1Clicked(false),
+            setBtn2Clicked(true),
+            setSelectedTecido(''),
+            setCor(''),
+            setCodigo(''),
+            setSelectedItems([]),
+            setFornecedor('')
+          ]}>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
       </View>
@@ -442,7 +492,11 @@ export default function EstoqueReferecias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP1}
-              onPress={() => [setBtn1Clicked(false), setBtn2Clicked(true)]}>
+              onPress={() => [
+                setBtn1Clicked(false),
+                setBtn2Clicked(true),
+                setSelectedTecido(''),
+              ]}>
               <Text style={styles.title3}>Visualizar</Text>
             </TouchableOpacity>
           </View>
@@ -458,7 +512,11 @@ export default function EstoqueReferecias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP2}
-              onPress={() => [setBtn1Clicked(true), setBtn2Clicked(false)]}>
+              onPress={() => [
+                setBtn1Clicked(true),
+                setBtn2Clicked(false),
+                setSelectedTecido(''),
+              ]}>
               <Text style={styles.title3}>Adicionar</Text>
             </TouchableOpacity>
           </View>
@@ -477,11 +535,10 @@ export default function EstoqueReferecias() {
           <RenderItem3 />
 
           <View style={{height: Dimensions.get('window').width / 1}}>
-            
             <FlatList
               data={corData}
               keyExtractor={item => item.id}
-              renderItem={({item, index}) => <VisualizarCores data={item}/>}
+              renderItem={({item, index}) => <VisualizarCores data={item} />}
             />
           </View>
         </View>
@@ -591,8 +648,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     width: Dimensions.get('window').width / 6.7,
-    textAlign: 'center',
     color: '#666',
+    paddingLeft: 11,
   },
   textTitle: {
     fontSize: 17,

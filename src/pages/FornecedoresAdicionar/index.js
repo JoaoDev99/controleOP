@@ -13,7 +13,6 @@ import CheckBox from '@react-native-community/checkbox';
 
 export default function Fornecedores() {
   const {createSupplier} = useContext(AuthContext);
-  
   const [fornecedor, setFornecedor] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -62,8 +61,6 @@ export default function Fornecedores() {
     );
   }
   
-  
-
   return (
     <SafeAreaView style={styles.container}>
       <View>

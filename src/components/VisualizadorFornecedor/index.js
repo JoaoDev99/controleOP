@@ -8,14 +8,14 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../routes/AuthProvider';
 
-export default function Product({data, onPress}) {
+export default function Fornecedor({data, onPress}) {
 
-  const {removeColorRef} = useContext(AuthContext);
+  const {removeSupplier} = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false); // Estado para controlar a visibilidade da View
 
-  const handleRemoveColorRef = (id) => {
+  const handleremoveSupplier = (id) => {
     // Função para remover a cor do Firebase e atualizar o estado de visibilidade
-    removeColorRef(id);
+    removeSupplier(id);
     setIsHidden(true);
   };
 
@@ -28,13 +28,12 @@ export default function Product({data, onPress}) {
     <View style={styles.container}>
       <View>
         <Text style={styles.title}>
-          Cor: {data.cor}, {data.codigo}
+          Fornecedor: {data.nome}
         </Text>
-        <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
         <Text style={styles.title}>Tecido: {data.tecido.join(', ')}. </Text>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity style={styles.buttonConclusion} onPress={() => handleRemoveColorRef(data.id)}>
+        <TouchableOpacity style={styles.buttonConclusion} onPress={() => handleremoveSupplier(data.id)}>
           <Icon name="trash-o" size={30} color={'#FFF'} />
         </TouchableOpacity>
       </View>
@@ -63,5 +62,14 @@ const styles = StyleSheet.create({
     paddingTop: 9,
     paddingBottom: 9,
     borderRadius: 5
+  },
+  containerAdd: {
+    backgroundColor: '#FAFAFA',
+    paddingEnd: 14,
+    paddingStart: 14,
+    paddingTop: 14,
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: '#999',
   },
 });

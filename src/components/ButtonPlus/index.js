@@ -15,12 +15,11 @@ export default function ButtonPlus() {
 
 const styles = StyleSheet.create({
   buttonEdit: {
+    backgroundColor: '#168fff',
     paddingStart: 12,
     paddingEnd: 12,
-    backgroundColor: '#168fff',
     paddingTop: 9,
     paddingBottom: 9,
-    borderRadius: 2,
-    marginLeft: 10,
+    borderRadius: 5
   }, 
 });

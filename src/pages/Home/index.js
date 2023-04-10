@@ -83,7 +83,7 @@ export default function Home() {
             <TouchableOpacity
               style={styles.buttonOP1}
               onPress={() => [setBtn1Clicked(false), setBtn2Clicked(true), setOpenOp(list)]}>
-              <Text style={styles.title2}>Abertas</Text>
+              <Text style={styles.title3}>Abertas</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -99,7 +99,7 @@ export default function Home() {
             <TouchableOpacity
               style={styles.buttonOP2}
               onPress={() => [setBtn1Clicked(true), setBtn2Clicked(false), setOpenOp(closeOp)]}>
-              <Text style={styles.title2}>Finalizadas</Text>
+              <Text style={styles.title3}>Finalizadas</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -131,9 +131,6 @@ const styles = StyleSheet.create({
     paddingStart: 14,
   },
   containerOP: {
-    borderWidth: 2,
-    borderColor: '#999',
-    borderRadius: 1,
     marginBottom: 14,
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,15 +151,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.23,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
   },
   buttonOP1F: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#A6D4FF',
+    backgroundColor: '#63B4FF',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.2,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
   },
   buttonOP2: {
     fontSize: 24,
@@ -172,15 +175,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.19,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
   buttonOP2F: {
     fontSize: 24,
     fontWeight: 'bold',
-    backgroundColor: '#A6D4FF',
+    backgroundColor: '#63B4FF',
     height: Dimensions.get('window').height / 9.99,
     width: Dimensions.get('window').width / 2.16,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
   title: {
     fontSize: 24,
@@ -190,6 +199,13 @@ const styles = StyleSheet.create({
   title2: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFF',
+    elevation: 10,
+  },
+  title3: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    elevation: 10,
   },
 });
