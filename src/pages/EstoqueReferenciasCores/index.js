@@ -20,7 +20,12 @@ const tipos = [
   {nome: 'Característica'},
   {nome: 'Peso'},
 ];
-const tecidos = [{nome: 'Brim'}, {nome: 'Malha'}, {nome: 'Social'}];
+const tecidos = [
+  {nome: 'Todos'},
+  {nome: 'Brim'},
+  {nome: 'Malha'},
+  {nome: 'Social'},
+];
 
 export default function EstoqueReferecias() {
   const {createColorRef} = useContext(AuthContext);
@@ -28,7 +33,6 @@ export default function EstoqueReferecias() {
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
-  const [corData, setCorData] = useState([]);
   const [btn1Clicked, setBtn1Clicked] = useState(false);
   const [btn2Clicked, setBtn2Clicked] = useState(true);
   const [clicked2, setClicked2] = useState(false);
@@ -40,9 +44,15 @@ export default function EstoqueReferecias() {
   const [fornecedor, setFornecedor] = useState('');
   const [cor, setCor] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [corData, setCorData] = useState([]);
   const [Brim, setBrim] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [Malha, setMalha] = useState([]);
+  const [Social, setSocial] = useState([]);
+  const [Todos, setTodos] = useState([]);
+  const [outroTecido, setOutroTecido] = useState([]);
+  const [isOutrosChecked, setIsOutrosChecked] = useState(false);
 
+  const [selectedItems, setSelectedItems] = useState([]);
   function CheckboxRender() {
     const items = [
       {id: 'Brim', label: 'Brim'},
@@ -54,36 +64,55 @@ export default function EstoqueReferecias() {
       const index = selectedItems.indexOf(item.id);
 
       if (index >= 0) {
-        // Item já está selecionado, então remove do array
         setSelectedItems(selectedItems.filter(id => id !== item.id));
       } else {
-        // Item não está selecionado, então adiciona ao array
         setSelectedItems([...selectedItems, item.id]);
       }
     };
 
     return (
-      <View style={{flexDirection: 'row',justifyContent: 'space-between', }}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         {items.map(item => (
           <View
             key={item.id}
             style={{
               marginTop: 10,
-              alignItems: 'center', 
-                      
+              alignItems: 'center',
             }}>
             <CheckBox
               disabled={false}
               value={selectedItems.indexOf(item.id) >= 0}
-              onValueChange={() => [
-                handleToggleItem(item),
-                console.log(selectedItems),
-              ]}
+              onValueChange={() => [handleToggleItem(item)]}
               tintColors={{true: '', false: '#000'}}
             />
             <Text style={styles.inputTitle2}>{item.label}</Text>
           </View>
         ))}
+        <CheckboxOutroRender />
+      </View>
+    );
+  }
+
+  function CheckboxOutroRender() {
+    const handleCheckBoxChange = newValue => {
+      // Lógica para lidar com a alteração de valor do checkbox
+      setIsOutrosChecked(newValue);
+    };
+
+    return (
+      <View
+        style={{
+          marginTop: 10,
+          alignItems: 'center',
+        }}>
+        <CheckBox
+          value={isOutrosChecked}
+          onValueChange={handleCheckBoxChange}
+          tintColors={{true: '', false: '#000'}}
+        />
+        <Text style={styles.inputTitle2}>
+          {isOutrosChecked ? 'Outros' : 'Outros'}
+        </Text>
       </View>
     );
   }
@@ -117,7 +146,7 @@ export default function EstoqueReferecias() {
         });
         setData(d);
         setList(d);
-        console.log(d);
+        console.log('Buscou2');
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -125,29 +154,50 @@ export default function EstoqueReferecias() {
   };
 
   const getCores = () => {
-    firestore()
+    const unsubscribe = firestore()
       .collection('corRef')
       .orderBy('cor', 'asc')
-      .get()
-      .then(querySnapshot => {
-        let d = [];
-        querySnapshot.forEach(documentSnapshot => {
-          const cor = {
-            cor: documentSnapshot.data().cor,
-            codigo: documentSnapshot.data().codigo,
-            fornecedor: documentSnapshot.data().fornecedor,
-          };
-          d.push(cor);
-        });
-        setCorData(d);
-      })
-      .catch(e => {
-        console.log('Erro, catch user' + e);
-      });
+      .onSnapshot(
+        querySnapshot => {
+          let d = [];
+          let a = 'Brim';
+          let b = 'Malha';
+          let c = 'Social';
+          querySnapshot.forEach(documentSnapshot => {
+            const cor = {
+              id: documentSnapshot.id,
+              cor: documentSnapshot.data().cor,
+              codigo: documentSnapshot.data().codigo,
+              fornecedor: documentSnapshot.data().fornecedor,
+              tecido: documentSnapshot.data().tecido,
+            };
+            d.push(cor);
+          });
+          setTodos(d);
+          setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
+          setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
+          setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
+          console.log('Buscou')
+        },
+        error => {
+          console.log('Erro, catch user' + error);
+        },
+      );
+
+    return unsubscribe;
   };
 
   useEffect(() => {
-    getFornecedores(), getCores();
+    const unsubscribe = getCores();
+    return (
+      () => {
+        unsubscribe();
+      } 
+    );
+  }, []);
+
+  useEffect(() =>{
+getFornecedores();
   }, []);
 
   const RenderAddCor = () => (
@@ -180,14 +230,35 @@ export default function EstoqueReferecias() {
       </View>
       <View style={{marginTop: 10}}>
         <Text style={styles.inputTitle}>Tecido:</Text>
-        
+        <CheckboxRender />
       </View>
+
+      {isOutrosChecked ? (
+        <View>
+          <TextInput
+            style={styles.textInputCor}
+            placeholder="Digite o tecido"
+            placeholderTextColor="#C0C0C0"
+            autoCorrect={false}
+            //onChangeText={tecido => setOutro(tecido)}
+            //value={10}
+          />
+        </View>
+      ) : null}
+
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.btnSeguir}
-          onPress={() =>
-            createColorRef(fornecedor, cor, codigo, selectedItems)
-          }>
+          onPress={() => [
+            createColorRef(fornecedor, cor, codigo, selectedItems),
+            setBtn1Clicked(false),
+            setBtn2Clicked(true),
+            setSelectedTecido(''),
+            setCor(''),
+            setCodigo(''),
+            setSelectedItems([]),
+            setFornecedor('')
+          ]}>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
       </View>
@@ -206,9 +277,9 @@ export default function EstoqueReferecias() {
           {fornecedor == '' ? 'Empresa' : fornecedor}
         </Text>
         {clicked ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked ? (
@@ -288,9 +359,9 @@ export default function EstoqueReferecias() {
             : selectedTipo}
         </Text>
         {clicked2 ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked2 ? (
@@ -349,9 +420,9 @@ export default function EstoqueReferecias() {
             : selectedTecido}
         </Text>
         {clicked3 ? (
-          <Icon name="arrow-drop-up" size={30} />
+          <Icon name="arrow-drop-up" size={30} color="#666" />
         ) : (
-          <Icon name="arrow-drop-down" size={30} />
+          <Icon name="arrow-drop-down" size={30} color="#666" />
         )}
       </TouchableOpacity>
       {clicked3 ? (
@@ -396,6 +467,24 @@ export default function EstoqueReferecias() {
     </View>
   );
 
+  const updateCorData = () => {
+    if (selectedTecido === 'Brim') {
+      setCorData(Brim);
+    } else if (selectedTecido === 'Malha') {
+      setCorData(Malha);
+    } else if (selectedTecido === 'Social') {
+      setCorData(Social);
+    } else if (selectedTecido === 'Todos') {
+      setCorData(Todos);
+    } else {
+      setCorData([]); // Caso nenhum valor de tecido seja selecionado, limpe o estado corData
+    }
+  };
+
+  useEffect(() => {
+    updateCorData();
+  }, [selectedTecido]);
+
   const RenderPageCor = () => (
     <View>
       <View style={styles.containerOP}>
@@ -403,7 +492,11 @@ export default function EstoqueReferecias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP1}
-              onPress={() => [setBtn1Clicked(false), setBtn2Clicked(true)]}>
+              onPress={() => [
+                setBtn1Clicked(false),
+                setBtn2Clicked(true),
+                setSelectedTecido(''),
+              ]}>
               <Text style={styles.title3}>Visualizar</Text>
             </TouchableOpacity>
           </View>
@@ -419,7 +512,11 @@ export default function EstoqueReferecias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP2}
-              onPress={() => [setBtn1Clicked(true), setBtn2Clicked(false)]}>
+              onPress={() => [
+                setBtn1Clicked(true),
+                setBtn2Clicked(false),
+                setSelectedTecido(''),
+              ]}>
               <Text style={styles.title3}>Adicionar</Text>
             </TouchableOpacity>
           </View>
@@ -432,24 +529,15 @@ export default function EstoqueReferecias() {
         )}
       </View>
       {btn1Clicked ? (
-        <RenderAddCor/>
+        RenderAddCor()
       ) : (
-        <View style={{borderWidth: 0.7, borderRadius: 3}}>
-          <View style={styles.containerTabela}>
-            <View style={styles.containerInternoCor}>
-              <Text style={styles.title}>Cor</Text>
-            </View>
-            <View style={styles.containerInternoCodigo}>
-              <Text style={styles.title}>Cod</Text>
-            </View>
-            <View style={styles.containerInternoFornecedor}>
-              <Text style={styles.title}>Fornecedor</Text>
-            </View>
-          </View>
-          <View style={{height: Dimensions.get('window').width / 1.2}}>
+        <View>
+          <RenderItem3 />
+
+          <View style={{maxHeight: Dimensions.get('window').width * 1.2, borderWidth: 1, }}>
             <FlatList
               data={corData}
-              keyExtractor={item => String(item.cor)}
+              keyExtractor={item => item.id}
               renderItem={({item, index}) => <VisualizarCores data={item} />}
             />
           </View>
@@ -460,20 +548,9 @@ export default function EstoqueReferecias() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>{RenderTipos()}</View>
-      {selectedTipo == 'Cores de Tecido'
-        ? <RenderPageCor/>
-        : null}
-      {selectedTipo == 'Característica' ? (
-        <View>
-          <Text style={{color: '#666'}}>Caracteristica</Text>
-        </View>
-      ) : null}
-      {selectedTipo == 'Peso' ? (
-        <View>
-          <Text style={{color: '#666'}}>Peso</Text>
-        </View>
-      ) : null}
+      
+       {RenderPageCor()}
+      
     </SafeAreaView>
   );
 }
@@ -562,8 +639,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     width: Dimensions.get('window').width / 6.7,
-    textAlign: 'center',
     color: '#666',
+    paddingLeft: 11,
   },
   textTitle: {
     fontSize: 17,

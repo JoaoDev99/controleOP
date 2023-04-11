@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -10,77 +10,28 @@ import {
 } from 'react-native';
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import CheckBox from '@react-native-community/checkbox';
-import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import VisualizarFornecedores from '../../components/VisualizadorFornecedor';
+import VisualizarCaracteristicas from '../../components/VisualizadorCaracteristicas';
 
-export default function Fornecedores() {
-  const {createSupplier} = useContext(AuthContext);
-  const navigation = useNavigation();
-  const [data, setData] = useState([]);
+export default function EstoqueReferecias() {
+  const {createCaracteristicaRef} = useContext(AuthContext);
   const [btn1Clicked, setBtn1Clicked] = useState(false);
   const [btn2Clicked, setBtn2Clicked] = useState(true);
-  const [fornecedor, setFornecedor] = useState('');
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [caracteristica, setCaraceristica] = useState('');
+  const [data, setData] = useState([]);
   const [clicked, setClicked] = useState(true);
 
-  function CheckboxRender() {
-    const items = [
-      {id: 'Brim', label: 'Brim'},
-      {id: 'Malha', label: 'Malha'},
-      {id: 'Social', label: 'Social'},
-    ];
-
-    const handleToggleItem = item => {
-      const index = selectedItems.indexOf(item.id);
-
-      if (index >= 0) {
-        // Item já está selecionado, então remove do array
-        setSelectedItems(selectedItems.filter(id => id !== item.id));
-      } else {
-        // Item não está selecionado, então adiciona ao array
-        setSelectedItems([...selectedItems, item.id]);
-      }
-    };
-
-    return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        {items.map(item => (
-          <View
-            key={item.id}
-            style={{
-              marginTop: 10,
-              alignItems: 'center',
-            }}>
-            <CheckBox
-              disabled={false}
-              value={selectedItems.indexOf(item.id) >= 0}
-              onValueChange={() => [
-                handleToggleItem(item),
-                console.log(selectedItems),
-              ]}
-              tintColors={{true: '', false: '#000'}}
-            />
-            <Text style={styles.inputTitle2}>{item.label}</Text>
-          </View>
-        ))}
-      </View>
-    );
-  }
-
-  const getFornecedores = () => {
+  const getCaracteristicas = () => {
     firestore()
-      .collection('fornecedores')
-      .orderBy('nome', 'asc')
+      .collection('caractRef')
+      .orderBy('caracteristica', 'asc')
       .get()
       .then(querySnapshot => {
         let d = [];
         querySnapshot.forEach(documentSnapshot => {
           const user = {
             id: documentSnapshot.id,
-            nome: documentSnapshot.data().nome,
-            tecido: documentSnapshot.data().tecido,
+            caracteristica: documentSnapshot.data().caracteristica,
           };
           d.push(user);
         });
@@ -93,8 +44,34 @@ export default function Fornecedores() {
   };
 
   useEffect(() => {
-    getFornecedores();
+    getCaracteristicas();
   }, [clicked]);
+
+  const RenderAddCor = () => (
+    <View style={styles.containerAdd}>
+      <View>
+        <Text style={styles.inputTitle}>Característica:</Text>
+        <TextInput
+          style={styles.textInputCor}
+          placeholder="Digite a característica..."
+          placeholderTextColor="#C0C0C0"
+          autoCorrect={false}
+          onChangeText={caracteristica => setCaraceristica(caracteristica)}
+          value={caracteristica}
+        />
+      </View>
+
+      <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          style={styles.btnSeguir}
+          onPress={() => [
+            createCaracteristicaRef(caracteristica),
+          ]}>
+          <Text style={{color: '#FFF'}}>Adicionar</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   const RenderPageCor = () => (
     <View>
@@ -103,7 +80,11 @@ export default function Fornecedores() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP1}
-              onPress={() => [setBtn1Clicked(false), setBtn2Clicked(true)]}>
+              onPress={() => [
+                setBtn1Clicked(false),
+                setBtn2Clicked(true),
+                setClicked(clicked == false ? true : false),
+              ]}>
               <Text style={styles.title3}>Visualizar</Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +100,11 @@ export default function Fornecedores() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP2}
-              onPress={() => [setBtn1Clicked(true), setBtn2Clicked(false)]}>
+              onPress={() => [
+                setBtn1Clicked(true),
+                setBtn2Clicked(false),
+                setClicked(clicked == false ? true : false),
+              ]}>
               <Text style={styles.title3}>Adicionar</Text>
             </TouchableOpacity>
           </View>
@@ -134,14 +119,16 @@ export default function Fornecedores() {
       {btn1Clicked ? (
         RenderAddCor()
       ) : (
-        <View style={{borderWidth: 1}}>
-          <View style={{maxHeight: Dimensions.get('window').width * 1.4}}>
+        <View>
+          <View
+            style={{
+              maxHeight: Dimensions.get('window').width * 1.2,
+              borderWidth: 1,
+            }}>
             <FlatList
               data={data}
               keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
-                <VisualizarFornecedores data={item} />
-              )}
+              renderItem={({item}) => <VisualizarCaracteristicas data={item} />}
             />
           </View>
         </View>
@@ -149,45 +136,8 @@ export default function Fornecedores() {
     </View>
   );
 
-  const RenderAddCor = () => (
-    <View style={styles.containerAdd}>
-      <View>
-        <Text style={styles.textTitle}>Fornecedor:</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Digite o nome do fornecedor"
-          placeholderTextColor="#C0C0C0"
-          autoCorrect={false}
-          color="#000"
-          onChangeText={fornecedor => setFornecedor(fornecedor)}></TextInput>
-      </View>
-
-      <Text style={styles.textTitle}>Tecido: </Text>
-
-      <CheckboxRender />
-
-      <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity
-          style={styles.btnSeguir}
-          onPress={() => [
-            createSupplier(fornecedor, selectedItems),
-            setClicked(clicked == false ? true : false),
-            setBtn1Clicked(false),
-            setBtn2Clicked(true),
-            setFornecedor(''),
-            setSelectedItems([])
-          ]}>
-          <Text style={{color: '#FFF'}}>Adicionar</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
   return (
-    <SafeAreaView style={styles.container}>
-      {RenderPageCor()}
-      <View style={{flexDirection: 'row'}}></View>
-    </SafeAreaView>
+    <SafeAreaView style={styles.container}>{RenderPageCor()}</SafeAreaView>
   );
 }
 
@@ -215,6 +165,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 10,
   },
+  containerTabela: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  containerInternoCor: {
+    borderWidth: 0.5,
+    padding: 10,
+    flexBasis: '30%',
+    borderTopLeftRadius: 3,
+  },
+  containerInternoCodigo: {
+    borderWidth: 0.5,
+    padding: 10,
+    flexBasis: '20%',
+  },
+  containerInternoFornecedor: {
+    borderWidth: 0.5,
+    borderTopRightRadius: 3,
+    padding: 10,
+    flexBasis: '50%',
+  },
   textInput: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
@@ -228,6 +200,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 50,
+    color: '#666',
+  },
+  textInputCor: {
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    borderRadius: 5,
+    marginTop: 10,
+    paddingLeft: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    width: '100%',
+    color: '#666',
+  },
+  textInputCodigo: {
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    borderRadius: 5,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    width: Dimensions.get('window').width / 6.7,
+    color: '#666',
+    paddingLeft: 11,
   },
   textTitle: {
     fontSize: 17,
@@ -255,6 +254,41 @@ const styles = StyleSheet.create({
     flexBasis: '30%',
     marginTop: 20,
   },
+  dropdownSelector: {
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    alignSelf: 'center',
+    marginTop: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+    marginBottom: 15,
+  },
+  inputTitle: {
+    color: '#696969',
+    fontSize: 15,
+  },
+  inputTitle2: {
+    color: '#696969',
+    fontSize: 15,
+  },
+  title2: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFF',
+    elevation: 10,
+  },
+  title3: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    elevation: 10,
+  },
   buttonOP1: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -263,21 +297,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.23,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
-    elevation: 20,
-  },
-  buttonOP2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#168fff',
-    height: Dimensions.get('window').height / 9.99,
-    width: Dimensions.get('window').width / 2.19,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    elevation: 20,
   },
   buttonOP1F: {
     fontSize: 24,
@@ -287,9 +309,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.2,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
-    zIndex: 1,
+  },
+  buttonOP2: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    backgroundColor: '#168fff',
+    height: Dimensions.get('window').height / 9.99,
+    width: Dimensions.get('window').width / 2.19,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 10,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
   buttonOP2F: {
     fontSize: 24,
@@ -299,22 +333,13 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.16,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
-    zIndex: 1,
   },
-  title2: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFF',
-  },
-  title3: {
-    fontSize: 24,
+  title: {
+    fontSize: 17,
     fontWeight: 'bold',
     color: '#000',
-  },
-  inputTitle2: {
-    color: '#696969',
-    fontSize: 15,
   },
 });

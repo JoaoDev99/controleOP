@@ -63,8 +63,18 @@ export const AuthProvider = ({children}) => {
           });
         },
 
+        createCaracteristicaRef: async (caracteristica) => {
+          firestore().collection('caractRef').add({
+            caracteristica: caracteristica,
+          });
+        },
+
         removeColorRef: async (id) => {
           firestore().collection('corRef').doc(id).delete();
+        },
+
+        removeCaracteristicaRef: async (id) => {
+          firestore().collection('caractRef').doc(id).delete();
         },
         
         removeSupplier: async (id) => {

@@ -14,9 +14,8 @@ import AddCSV from '../pages/AdicionarCSV';
 import AddClientes from '../pages/AdicionarClientes';
 import EstoqueHome from '../pages/EstoqueHome';
 import FornecedoresHome from '../pages/FornecedoresHome';
-import AddFornecedores from '../pages/FornecedoresAdicionar';
-import EstoqueReferecias from '../pages/EstoqueReferencias';
-
+import EstoqueRefereciasCores from '../pages/EstoqueReferenciasCores';
+import EstoqueRefereciasCaracteristicas from '../pages/EstoqueReferenciasCaracteristicas';
 
 import {useContext} from 'react';
 
@@ -141,14 +140,6 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="AddFornecedores"
-        component={AddFornecedores}
-        options={{
-          title: 'Adicionar Fornecedores',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
         name="EstoqueHome"
         component={EstoqueHome}
         options={{
@@ -157,10 +148,18 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="EstoqueReferencias"
-        component={EstoqueReferecias}
+        name="EstoqueReferenciasCores"
+        component={EstoqueRefereciasCores}
         options={{
-          title: 'Referências',
+          title: 'Referências de cores',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueReferenciasCaracteristicas"
+        component={EstoqueRefereciasCaracteristicas}
+        options={{
+          title: 'Características de referêcia',
           headerShown: true,
         }}
       />
