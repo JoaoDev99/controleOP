@@ -14,8 +14,9 @@ import AddCSV from '../pages/AdicionarCSV';
 import AddClientes from '../pages/AdicionarClientes';
 import EstoqueHome from '../pages/EstoqueHome';
 import FornecedoresHome from '../pages/FornecedoresHome';
-import EstoqueRefereciasCores from '../pages/EstoqueReferenciasCores';
+import EstoqueRefereciasTecidos from '../pages/EstoqueReferenciasTecidos';
 import EstoqueRefereciasCaracteristicas from '../pages/EstoqueReferenciasCaracteristicas';
+import EstoqueMateriaisTecidos from '../pages/EstoqueMateriaisTecidos';
 
 import {useContext} from 'react';
 
@@ -149,9 +150,9 @@ function MyStack() {
       />
       <Stack.Screen
         name="EstoqueReferenciasCores"
-        component={EstoqueRefereciasCores}
+        component={EstoqueRefereciasTecidos}
         options={{
-          title: 'Referências de cores',
+          title: 'Referências de tecidos',
           headerShown: true,
         }}
       />
@@ -160,6 +161,14 @@ function MyStack() {
         component={EstoqueRefereciasCaracteristicas}
         options={{
           title: 'Características de referêcia',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueMateriaisTecidos"
+        component={EstoqueMateriaisTecidos}
+        options={{
+          title: 'Tecidos',
           headerShown: true,
         }}
       />

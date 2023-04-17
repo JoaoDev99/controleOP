@@ -54,11 +54,10 @@ export const AuthProvider = ({children}) => {
             });
         },
 
-        createColorRef: async (fornecedor, cor, codigo, tecido) => {
-          firestore().collection('corRef').add({
+        createTipoTecido: async (fornecedor, nome, tecido) => {
+          firestore().collection('tipoTecido').add({
             fornecedor: fornecedor,
-            cor: cor,
-            codigo: codigo,
+            nome: nome,
             tecido: tecido,
           });
         },
@@ -69,8 +68,24 @@ export const AuthProvider = ({children}) => {
           });
         },
 
-        removeColorRef: async (id) => {
-          firestore().collection('corRef').doc(id).delete();
+        createTecido: async (fornecedor, cor, codigo, tecido, quantidade, tipoMedida, tipoTecido) => {
+          firestore().collection('tecidos').add({
+            fornecedor: fornecedor,
+            cor: cor,
+            codigo: codigo,
+            tecido: tecido,
+            quantidade: quantidade,
+            tipoMedida: tipoMedida,
+            tipoTecido: tipoTecido,
+          });
+        },
+
+        removeTipoTecido: async (id) => {
+          firestore().collection('tipoTecido').doc(id).delete();
+        },
+
+        removeTecido: async (id) => {
+          firestore().collection('tecidos').doc(id).delete();
         },
 
         removeCaracteristicaRef: async (id) => {

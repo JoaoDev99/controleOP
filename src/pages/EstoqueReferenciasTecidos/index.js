@@ -12,7 +12,7 @@ import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
-import VisualizarCores from '../../components/VisualizadorCor';
+import VisualizarCores from '../../components/VisualizadorTipoTecido';
 import CheckBox from '@react-native-community/checkbox';
 
 const tipos = [
@@ -28,7 +28,7 @@ const tecidos = [
 ];
 
 export default function EstoqueReferecias() {
-  const {createColorRef} = useContext(AuthContext);
+  const {createTipoTecido} = useContext(AuthContext);
   const [search, setSearch] = useState('');
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState([]);
@@ -42,7 +42,7 @@ export default function EstoqueReferecias() {
   const [data3, setData3] = useState(tecidos);
   const [selectedTecido, setSelectedTecido] = useState('');
   const [fornecedor, setFornecedor] = useState('');
-  const [cor, setCor] = useState('');
+  const [nome, setNome] = useState('');
   const [codigo, setCodigo] = useState('');
   const [corData, setCorData] = useState([]);
   const [Brim, setBrim] = useState([]);
@@ -52,7 +52,7 @@ export default function EstoqueReferecias() {
   const [outroTecido, setOutroTecido] = useState([]);
   const [isOutrosChecked, setIsOutrosChecked] = useState(false);
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   function CheckboxRender() {
     const items = [
       {id: 'Brim', label: 'Brim'},
@@ -61,12 +61,11 @@ export default function EstoqueReferecias() {
     ];
 
     const handleToggleItem = item => {
-      const index = selectedItems.indexOf(item.id);
-
-      if (index >= 0) {
-        setSelectedItems(selectedItems.filter(id => id !== item.id));
+      if (selectedItem === item.id) {
+        // Verifica se o item já está selecionado
+        setSelectedItem(null); // Se estiver selecionado, deseleciona
       } else {
-        setSelectedItems([...selectedItems, item.id]);
+        setSelectedItem(item.id); // Se não estiver selecionado, seleciona o novo item
       }
     };
 
@@ -81,8 +80,11 @@ export default function EstoqueReferecias() {
             }}>
             <CheckBox
               disabled={false}
-              value={selectedItems.indexOf(item.id) >= 0}
-              onValueChange={() => [handleToggleItem(item)]}
+              value={selectedItem === item.id}
+              onValueChange={() => [
+                handleToggleItem(item),
+                setIsOutrosChecked(false),
+              ]}
               tintColors={{true: '', false: '#000'}}
             />
             <Text style={styles.inputTitle2}>{item.label}</Text>
@@ -97,6 +99,7 @@ export default function EstoqueReferecias() {
     const handleCheckBoxChange = newValue => {
       // Lógica para lidar com a alteração de valor do checkbox
       setIsOutrosChecked(newValue);
+      setSelectedItem(null);
     };
 
     return (
@@ -155,8 +158,8 @@ export default function EstoqueReferecias() {
 
   const getCores = () => {
     const unsubscribe = firestore()
-      .collection('corRef')
-      .orderBy('cor', 'asc')
+      .collection('tipoTecido')
+      .orderBy('nome', 'asc')
       .onSnapshot(
         querySnapshot => {
           let d = [];
@@ -166,8 +169,7 @@ export default function EstoqueReferecias() {
           querySnapshot.forEach(documentSnapshot => {
             const cor = {
               id: documentSnapshot.id,
-              cor: documentSnapshot.data().cor,
-              codigo: documentSnapshot.data().codigo,
+              nome: documentSnapshot.data().nome,
               fornecedor: documentSnapshot.data().fornecedor,
               tecido: documentSnapshot.data().tecido,
             };
@@ -177,7 +179,7 @@ export default function EstoqueReferecias() {
           setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
           setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
           setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
-          console.log('Buscou')
+          console.log('Buscou');
         },
         error => {
           console.log('Erro, catch user' + error);
@@ -189,42 +191,28 @@ export default function EstoqueReferecias() {
 
   useEffect(() => {
     const unsubscribe = getCores();
-    return (
-      () => {
-        unsubscribe();
-      } 
-    );
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  useEffect(() =>{
-getFornecedores();
+  useEffect(() => {
+    getFornecedores();
   }, []);
 
   const RenderAddCor = () => (
     <View style={styles.containerAdd}>
       {RenderItem()}
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View>
         <View>
-          <Text style={styles.inputTitle}>Cor:</Text>
+          <Text style={styles.inputTitle}>Nome:</Text>
           <TextInput
             style={styles.textInputCor}
-            placeholder="Digite o nome da cor"
+            placeholder="Digite o nome do tecido."
             placeholderTextColor="#C0C0C0"
             autoCorrect={false}
-            onChangeText={cor => setCor(cor)}
-            value={cor}
-          />
-        </View>
-        <View>
-          <Text style={styles.inputTitle}>Código:</Text>
-          <TextInput
-            style={styles.textInputCodigo}
-            placeholder="123..."
-            placeholderTextColor="#C0C0C0"
-            autoCorrect={false}
-            onChangeText={cod => setCodigo(cod)}
-            keyboardType="numeric"
-            value={codigo}
+            onChangeText={nome => setNome(nome)}
+            value={nome}
           />
         </View>
       </View>
@@ -237,11 +225,11 @@ getFornecedores();
         <View>
           <TextInput
             style={styles.textInputCor}
-            placeholder="Digite o tecido"
+            placeholder="Digite o tipo do tecido"
             placeholderTextColor="#C0C0C0"
             autoCorrect={false}
-            //onChangeText={tecido => setOutro(tecido)}
-            //value={10}
+            onChangeText={tecido => setSelectedItem(tecido)}
+            value={selectedItem}
           />
         </View>
       ) : null}
@@ -250,14 +238,12 @@ getFornecedores();
         <TouchableOpacity
           style={styles.btnSeguir}
           onPress={() => [
-            createColorRef(fornecedor, cor, codigo, selectedItems),
+            createTipoTecido(fornecedor, nome, selectedItem),
             setBtn1Clicked(false),
             setBtn2Clicked(true),
             setSelectedTecido(''),
-            setCor(''),
-            setCodigo(''),
-            setSelectedItems([]),
-            setFornecedor('')
+            setSelectedItem(null),
+            setFornecedor(''),
           ]}>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
@@ -534,7 +520,11 @@ getFornecedores();
         <View>
           <RenderItem3 />
 
-          <View style={{maxHeight: Dimensions.get('window').width * 1.2, borderWidth: 1, }}>
+          <View
+            style={{
+              maxHeight: Dimensions.get('window').width * 1.2,
+              borderWidth: 1,
+            }}>
             <FlatList
               data={corData}
               keyExtractor={item => item.id}
@@ -547,11 +537,7 @@ getFornecedores();
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      
-       {RenderPageCor()}
-      
-    </SafeAreaView>
+    <SafeAreaView style={styles.container}>{RenderPageCor()}</SafeAreaView>
   );
 }
 
@@ -626,7 +612,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 50,
-    width: Dimensions.get('window').width / 1.6,
+    width: '100%',
     color: '#666',
   },
   textInputCodigo: {

@@ -24,7 +24,7 @@ export default function Caracteristica({data}) {
     <View style={styles.container}>
       <View>
         <Text style={styles.title}>
-          Fornecedor: {data.caracteristica}
+          Característica: {data.caracteristica}
         </Text>
       </View>
       <View style={styles.buttons}>

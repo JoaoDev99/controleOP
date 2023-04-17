@@ -37,7 +37,7 @@ export default function EstoqueHome() {
             <View style={styles.containerSubButtons1}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('EstoqueReferenciasCores')}>
-                <Text style={styles.buttonSubTxt}>Cores</Text>
+                <Text style={styles.buttonSubTxt}>Tipos de Tecidos</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.containerSubButtons2}>
@@ -67,17 +67,17 @@ export default function EstoqueHome() {
           <View>
             <View style={styles.containerSub2Buttons1}>
               <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>AAA</Text>
+                <Text style={styles.buttonSubTxt}>Geral</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.containerSub2Buttons2}>
-              <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>BBB</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('EstoqueMateriaisTecidos')}>
+                <Text style={styles.buttonSubTxt}>Tecidos</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.containerSub2Buttons3}>
               <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>CCC</Text>
+                <Text style={styles.buttonSubTxt}>Insumos</Text>
               </TouchableOpacity>
             </View>
           </View>
