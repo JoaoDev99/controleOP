@@ -523,7 +523,6 @@ export default function EstoqueReferecias() {
           <View
             style={{
               maxHeight: Dimensions.get('window').width * 1.2,
-              borderWidth: 1,
             }}>
             <FlatList
               data={corData}

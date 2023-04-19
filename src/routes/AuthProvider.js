@@ -68,7 +68,7 @@ export const AuthProvider = ({children}) => {
           });
         },
 
-        createTecido: async (fornecedor, cor, codigo, tecido, quantidade, tipoMedida, tipoTecido) => {
+        createTecido: async (fornecedor, cor, codigo, tecido, quantidade, tipoMedida, tipoTecido, observacoes) => {
           firestore().collection('tecidos').add({
             fornecedor: fornecedor,
             cor: cor,
@@ -77,6 +77,7 @@ export const AuthProvider = ({children}) => {
             quantidade: quantidade,
             tipoMedida: tipoMedida,
             tipoTecido: tipoTecido,
+            observacoes: observacoes,
           });
         },
 

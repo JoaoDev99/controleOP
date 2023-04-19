@@ -12,14 +12,9 @@ import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
-import VisualizarCores from '../../components/VisualizadorTipoTecido';
+import VisualizarCores from '../../components/VisualizadorTecido';
 import CheckBox from '@react-native-community/checkbox';
 
-const tipos = [
-  {nome: 'Cores de Tecido'},
-  {nome: 'Característica'},
-  {nome: 'Peso'},
-];
 const tecidos = [
   {nome: 'Todos'},
   {nome: 'Brim'},
@@ -37,11 +32,8 @@ export default function EstoqueMaterias() {
   const [data3, setData3] = useState(tecidos);
   const [list, setList] = useState([]);
   const [list2, setList2] = useState([]);
-  const [tipoClicked, setTipoClicked] = useState(false);
   const [btn1Clicked, setBtn1Clicked] = useState(false);
   const [btn2Clicked, setBtn2Clicked] = useState(true);
-  const [clicked2, setClicked2] = useState(false);
-  const [selectedCorRef, setSelectedCorRef] = useState([]);
   const [clicked3, setClicked3] = useState(false);
   const [selectedTecido, setSelectedTecido] = useState('');
   const [fornecedor, setFornecedor] = useState('');
@@ -53,9 +45,29 @@ export default function EstoqueMaterias() {
   const [Malha, setMalha] = useState([]);
   const [Social, setSocial] = useState([]);
   const [Todos, setTodos] = useState([]);
-  const [corRef, setCorRef] = useState('');
   const [tipoTecido, setTipoTecido] = useState('');
   const [tecido, setTecido] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+  const [displayList, setDisplayList] = useState(false);
+  const [displayList2, setDisplayList2] = useState(false);
+
+  const [dataTecidos, setDataTecidos] = useState([]);
+  const [dataTecidoNovo, setDataTecidoNovo] = useState([]);
+  const [buscar, setBuscar] = useState('');
+
+  const onSearchTecido = text => {
+    setBuscar(text);
+    if (text === '') {
+      setDataTecidos(dataTecidoNovo);
+    } else {
+      const newData = dataTecidos.filter(item => {
+        const itemData = `${item.fornecedor.toUpperCase()} ${item.cor.toUpperCase()} ${item.tecido.toUpperCase()} ${item.tipoTecido.toUpperCase()}`;
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setDataTecidos(newData);
+    }
+  };
 
   const [selectedItem, setSelectedItem] = useState(null);
   function CheckboxRender() {
@@ -166,33 +178,10 @@ export default function EstoqueMaterias() {
       });
   };
 
-  const getCoresRef = () => {
-    firestore()
-      .collection('tipoTecido')
-      .orderBy('nome', 'asc')
-      .get()
-      .then(querySnapshot => {
-        let d = [];
-        querySnapshot.forEach(documentSnapshot => {
-          const cor = {
-            nome: documentSnapshot.data().nome,
-            fornecedor: documentSnapshot.data().fornecedor,
-            tecido: documentSnapshot.data().tecido,
-          };
-          d.push(cor);
-        });
-        setCorRef(d);
-        console.log(d);
-      })
-      .catch(e => {
-        console.log('Erro, catch user' + e);
-      });
-  };
-
   const getCores = () => {
     const unsubscribe = firestore()
       .collection('tecidos')
-      .orderBy('cor', 'asc')
+      .orderBy('fornecedor', 'asc')
       .onSnapshot(
         querySnapshot => {
           let d = [];
@@ -213,6 +202,8 @@ export default function EstoqueMaterias() {
             d.push(cor);
           });
           setTodos(d);
+          setDataTecidos(d);
+          setDataTecidoNovo(d);
           setBrim(d.filter(item => item.tecido.indexOf(a) > -1));
           setMalha(d.filter(item => item.tecido.indexOf(b) > -1));
           setSocial(d.filter(item => item.tecido.indexOf(c) > -1));
@@ -234,13 +225,13 @@ export default function EstoqueMaterias() {
   }, []);
 
   useEffect(() => {
-    getFornecedores(), getCoresRef(), getTipoTecido();
+    getFornecedores(), getTipoTecido();
   }, []);
 
   const RenderAddCor = () => (
     <View style={styles.containerAdd}>
-      {RenderTipoTecido()}
       {RenderItem()}
+      {RenderTipoTecido()}
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View>
           <Text style={styles.inputTitle}>Cor:</Text>
@@ -261,7 +252,6 @@ export default function EstoqueMaterias() {
             placeholderTextColor="#C0C0C0"
             autoCorrect={false}
             onChangeText={cod => setCodigo(cod)}
-            keyboardType="numeric"
             value={codigo}
           />
         </View>
@@ -277,6 +267,7 @@ export default function EstoqueMaterias() {
             autoCorrect={false}
             onChangeText={quantidade => setQuantidade(quantidade)}
             value={quantidade}
+            keyboardType="numeric"
           />
         </View>
         <View style={{marginLeft: Dimensions.get('window').width / 20}}>
@@ -288,14 +279,14 @@ export default function EstoqueMaterias() {
       </View>
 
       <View>
-        <Text style={[styles.inputTitle, {marginTop: 10}]}>Tecido:</Text>
+        <Text style={[styles.inputTitle, {marginTop: 10}]}>Observações:</Text>
         <TextInput
-          style={styles.textInputQuantidade}
-          placeholder="Tecido"
+          style={styles.textInput}
+          placeholder="Adicione observações caso necessário"
           placeholderTextColor="#C0C0C0"
           autoCorrect={false}
-          onChangeText={tecido => setTecido(tecido)}
-          value={tecido}
+          onChangeText={observacoes => setObservacoes(observacoes)}
+          value={observacoes}
         />
       </View>
 
@@ -311,15 +302,16 @@ export default function EstoqueMaterias() {
               quantidade,
               selectedItem,
               tipoTecido,
+              observacoes,
             ),
-            setBtn1Clicked(false),
-            setBtn2Clicked(true),
-            setSelectedTecido(''),
-            setCor(''),
-            setCodigo(''),
-            setSelectedItem(''),
-            setFornecedor(''),
-            setTipoTecido(''),
+            // setBtn1Clicked(false),
+            // setBtn2Clicked(true),
+            // setSelectedTecido(''),
+            // setCor(''),
+            // setCodigo(''),
+            // setSelectedItem(''),
+            // setFornecedor(''),
+            // setTipoTecido(''),
           ]}>
           <Text style={{color: '#FFF'}}>Adicionar</Text>
         </TouchableOpacity>
@@ -328,23 +320,24 @@ export default function EstoqueMaterias() {
   );
 
   const RenderItem = () => (
-    <View style={{zIndex: 1}}>
+    <View style={{zIndex: 99}}>
       <Text style={styles.inputTitle}>Fornecedor:</Text>
-      <TouchableOpacity
-        style={styles.dropdownSelector}
-        onPress={() => {
-          setClicked(!clicked);
-        }}>
-        <Text style={{color: '#666'}}>
-          {fornecedor == '' ? 'Selecione o fornecedor' : fornecedor}
-        </Text>
-        {clicked ? (
-          <Icon name="arrow-drop-up" size={30} color="#666" />
-        ) : (
-          <Icon name="arrow-drop-down" size={30} color="#666" />
-        )}
-      </TouchableOpacity>
-      {clicked ? (
+      <TextInput
+        placeholder="Selecione fornecedor"
+        placeholderTextColor={'#666'}
+        value={search}
+        ref={searchRef}
+        onChangeText={txt => {
+          onSearch(txt);
+          setSearch(txt);
+        }}
+        onFocus={() => {
+          setDisplayList(true);
+        }}
+        style={styles.textInput}
+      />
+
+      {displayList && (
         <View
           style={{
             elevation: 5,
@@ -353,32 +346,8 @@ export default function EstoqueMaterias() {
             width: '100%',
             backgroundColor: '#fff',
             borderRadius: 10,
-            position: 'absolute',
             zIndex: 2,
-            marginTop: Dimensions.get('window').width / 4.5,
           }}>
-          <TextInput
-            placeholder="Buscar..."
-            placeholderTextColor={'#666'}
-            value={search}
-            ref={searchRef}
-            onChangeText={txt => {
-              onSearch(txt);
-              setSearch(txt);
-            }}
-            style={{
-              width: '90%',
-              height: 50,
-              alignSelf: 'center',
-              borderWidth: 0.5,
-              borderColor: '#8e8e8e',
-              borderRadius: 5,
-              marginTop: 20,
-              paddingLeft: 20,
-              color: '#666',
-            }}
-          />
-
           <FlatList
             data={data}
             renderItem={({item, index}) => {
@@ -391,12 +360,13 @@ export default function EstoqueMaterias() {
                     justifyContent: 'center',
                     borderBottomWidth: 0.5,
                     borderColor: '#8e8e8e',
+                    zIndex: 1,
                   }}
                   onPress={() => {
                     setFornecedor(item.nome);
-                    setClicked(!clicked);
+                    setDisplayList(false);
                     onSearch('');
-                    setSearch('');
+                    setSearch(item.nome);
                   }}>
                   <Text style={{fontWeight: '400', color: '#666'}}>
                     {item.nome}
@@ -406,28 +376,29 @@ export default function EstoqueMaterias() {
             }}
           />
         </View>
-      ) : null}
+      )}
     </View>
   );
 
   const RenderTipoTecido = () => (
-    <View style={{marginTop: 10, zIndex: 999}}>
+    <View style={{marginTop: 10, zIndex: 1}}>
       <Text style={styles.inputTitle}>Tipo do tecido:</Text>
-      <TouchableOpacity
-        style={styles.dropdownSelector}
-        onPress={() => {
-          setTipoClicked(!tipoClicked);
-        }}>
-        <Text style={{color: '#666'}}>
-          {tipoTecido == '' ? 'Selecione o tipo de tecido' : tipoTecido}
-        </Text>
-        {tipoClicked ? (
-          <Icon name="arrow-drop-up" size={30} color="#666" />
-        ) : (
-          <Icon name="arrow-drop-down" size={30} color="#666" />
-        )}
-      </TouchableOpacity>
-      {tipoClicked ? (
+      <TextInput
+        placeholder="Selecione o tipo de tecido"
+        placeholderTextColor={'#666'}
+        value={search2}
+        ref={searchRef2}
+        onChangeText={txt => {
+          onSearch2(txt);
+          setSearch2(txt);
+        }}
+        onFocus={() => {
+          setDisplayList2(true);
+        }}
+        style={styles.textInput}
+      />
+
+      {displayList2 ? (
         <View
           style={{
             elevation: 5,
@@ -436,31 +407,9 @@ export default function EstoqueMaterias() {
             width: '100%',
             backgroundColor: '#fff',
             borderRadius: 10,
-            position: 'absolute',
-            top: Dimensions.get('window').width / 4.5,
+            // position: 'absolute',
+            // top: Dimensions.get('window').width / 4.5,
           }}>
-          <TextInput
-            placeholder="Buscar..."
-            placeholderTextColor={'#666'}
-            value={search2}
-            ref={searchRef2}
-            onChangeText={txt => {
-              onSearch2(txt);
-              setSearch2(txt);
-            }}
-            style={{
-              width: '90%',
-              height: 50,
-              alignSelf: 'center',
-              borderWidth: 0.5,
-              borderColor: '#8e8e8e',
-              borderRadius: 5,
-              marginTop: 20,
-              paddingLeft: 20,
-              color: '#666',
-            }}
-          />
-
           <FlatList
             data={data2}
             renderItem={({item, index}) => {
@@ -476,9 +425,10 @@ export default function EstoqueMaterias() {
                   }}
                   onPress={() => {
                     setTipoTecido(item.nome);
-                    setTipoClicked(!tipoClicked);
+                    setDisplayList2(false);
                     onSearch2('');
-                    setSearch2('');
+                    setSearch2(item.nome);
+                    setTecido(item.tecido);
                   }}
                   scrollEnabled={true}>
                   <Text style={{fontWeight: '400', color: '#666'}}>
@@ -618,16 +568,20 @@ export default function EstoqueMaterias() {
         RenderAddCor()
       ) : (
         <View>
-          <RenderItem3 />
-
+          <TextInput
+            style={styles.textInput}
+            placeholder="Pesquisar"
+            value={buscar}
+            onChangeText={onSearchTecido}
+          />
           <View
             style={{
-              maxHeight: Dimensions.get('window').width * 1.2,
+              maxHeight: Dimensions.get('window').width * 1.3,
             }}>
             <FlatList
-              data={corData}
+              data={dataTecidos}
               keyExtractor={item => item.id}
-              renderItem={({item, index}) => <VisualizarCores data={item} />}
+              renderItem={({item}) => <VisualizarCores data={item} />}
             />
           </View>
         </View>

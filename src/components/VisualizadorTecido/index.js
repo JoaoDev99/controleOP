@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AuthContext} from '../../routes/AuthProvider';
 
-export default function VisualizarTipoTecidos({data}) {
+export default function VisualizarTecidos({data}) {
   const {removeTecido} = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false); // Estado para controlar a visibilidade da View
 
@@ -16,9 +16,10 @@ export default function VisualizarTipoTecidos({data}) {
     !isHidden && (
       <View style={styles.container}>
         <View>
+          <Text style={styles.title}>Cor: {data.cor}, {data.codigo}</Text>
           <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
-          <Text style={styles.title}>Tipo de tecido: {data.nome} </Text>
-          <Text style={styles.title}>Tecido: {data.tecido} </Text>
+          <Text style={styles.title}>Tecido: {data.tipoTecido}, {data.tecido}</Text>
+          <Text style={styles.title}>Quantidade: {data.quantidade} {data.tipoMedida}</Text>
           
         </View>
         <View style={styles.buttons}>
