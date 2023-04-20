@@ -2,10 +2,12 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AuthContext} from '../../routes/AuthProvider';
+import {useNavigation} from '@react-navigation/native';
 
 export default function VisualizarTecidos({data}) {
   const {removeTecido} = useContext(AuthContext);
-  const [isHidden, setIsHidden] = useState(false); // Estado para controlar a visibilidade da View
+  const [isHidden, setIsHidden] = useState(false);
+  const navigation = useNavigation();
 
   const handleremoveTipoTecido = id => {
     removeTecido(id);
@@ -15,13 +17,30 @@ export default function VisualizarTecidos({data}) {
   return (
     !isHidden && (
       <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>Cor: {data.cor}, {data.codigo}</Text>
-          <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
-          <Text style={styles.title}>Tecido: {data.tipoTecido}, {data.tecido}</Text>
-          <Text style={styles.title}>Quantidade: {data.quantidade} {data.tipoMedida}</Text>
-          
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('EstoqueMateriaisEditarTecidos', {
+            id: data.id,
+            cor: data.cor,
+            codigo: data.codigo,
+            fornecedor: data.fornecedor,
+            tecido: data.tecido,
+            tipoTecido: data.tipoTecido,
+            quantidade: data.quantidade,
+            tipoMedida: data.tipoMedida,
+          })}>
+          <View>
+            <Text style={styles.title}>
+              Cor: {data.cor}, {data.codigo}
+            </Text>
+            <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
+            <Text style={styles.title}>
+              Tecido: {data.tipoTecido}, {data.tecido}
+            </Text>
+            <Text style={styles.title}>
+              Quantidade: {data.quantidade} {data.tipoMedida}
+            </Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.buttons}>
           <TouchableOpacity
             style={styles.buttonConclusion}
@@ -43,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 10,
   },
   title: {
     fontSize: 17,
