@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorTecido';
 import CheckBox from '@react-native-community/checkbox';
@@ -174,7 +173,7 @@ export default function EstoqueMaterias() {
       });
   };
 
-  const parseQuantidade = (quantidade) => {
+  const parseQuantidade = quantidade => {
     return parseInt(quantidade, 10);
   };
 
@@ -186,7 +185,7 @@ export default function EstoqueMaterias() {
         querySnapshot => {
           let d = [];
           querySnapshot.forEach(documentSnapshot => {
-            const cor = {
+            const tecidos = {
               id: documentSnapshot.id,
               fornecedor: documentSnapshot.data().fornecedor,
               cor: documentSnapshot.data().cor,
@@ -195,8 +194,12 @@ export default function EstoqueMaterias() {
               quantidade: parseQuantidade(documentSnapshot.data().quantidade),
               tipoMedida: documentSnapshot.data().tipoMedida,
               tipoTecido: documentSnapshot.data().tipoTecido,
+              estoqueMinimo:
+                documentSnapshot.data().estoqueMinimo != ''
+                  ? parseQuantidade(documentSnapshot.data().estoqueMinimo)
+                  : '',
             };
-            d.push(cor);
+            d.push(tecidos);
           });
           setDataTecido(d);
           setDataReserva(d);
@@ -377,8 +380,7 @@ export default function EstoqueMaterias() {
     } else {
       setData(
         list.filter(
-          item =>
-            item.nome.toLowerCase().indexOf(search.toLowerCase()) > -1,
+          item => item.nome.toLowerCase().indexOf(search.toLowerCase()) > -1,
         ),
       );
     }
@@ -451,8 +453,7 @@ export default function EstoqueMaterias() {
     } else {
       setData2(
         list2.filter(
-          item =>
-            item.nome.toLowerCase().indexOf(search2.toLowerCase()) > -1,
+          item => item.nome.toLowerCase().indexOf(search2.toLowerCase()) > -1,
         ),
       );
     }
@@ -465,10 +466,7 @@ export default function EstoqueMaterias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP1}
-              onPress={() => [
-                setBtn1Clicked(false),
-                setBtn2Clicked(true),
-              ]}>
+              onPress={() => [setBtn1Clicked(false), setBtn2Clicked(true)]}>
               <Text style={styles.title3}>Visualizar</Text>
             </TouchableOpacity>
           </View>
@@ -484,10 +482,7 @@ export default function EstoqueMaterias() {
           <View>
             <TouchableOpacity
               style={styles.buttonOP2}
-              onPress={() => [
-                setBtn1Clicked(true),
-                setBtn2Clicked(false),
-              ]}>
+              onPress={() => [setBtn1Clicked(true), setBtn2Clicked(false)]}>
               <Text style={styles.title3}>Adicionar</Text>
             </TouchableOpacity>
           </View>

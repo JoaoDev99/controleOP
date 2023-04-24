@@ -1,12 +1,22 @@
-import React, {useState} from 'react';
-import {View, TextInput, Text, StyleSheet, Dimensions} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {PlusButton, MinusButton} from '../../components/ButtonsPlusAndMinus';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {AuthContext} from '../../routes/AuthProvider';
 
 export default function EstoqueMateriasEditarTecidos({route}) {
   const [quantidade, setQuantidade] = useState(route.params.quantidade);
-  const [estoqueMin, setEstoqueMin] = useState('');
+  const [estoqueMin, setEstoqueMin] = useState(route.params.estoqueMinimo);
+
+  const {updateTecido} = useContext(AuthContext);
+  const {addEstoqueMinimo} = useContext(AuthContext);
 
   const parseQuantidade = quantidade => {
     return parseInt(quantidade, 10) || '';
@@ -25,7 +35,7 @@ export default function EstoqueMateriasEditarTecidos({route}) {
           )}
         </Text>
 
-        <View style={{flexDirection:'row'}}></View>
+        <View style={{flexDirection: 'row'}}></View>
         <Text style={styles.textTitleQtd}>Quantidade:</Text>
         <View style={{flexDirection: 'row'}}>
           <PlusButton onPress={() => setQuantidade(state => state + 1)} />
@@ -34,6 +44,7 @@ export default function EstoqueMateriasEditarTecidos({route}) {
             onChangeText={t => setQuantidade(parseQuantidade(t))}>
             {quantidade}
           </TextInput>
+          <Text style={styles.inputTextQtd}>{route.params.tipoMedida}</Text>
           <MinusButton onPress={() => setQuantidade(state => state - 1)} />
         </View>
 
@@ -45,8 +56,19 @@ export default function EstoqueMateriasEditarTecidos({route}) {
             {estoqueMin}
           </TextInput>
         </View>
+        <View>
+          <TouchableOpacity
+            style={styles.btnSalvar}
+            onPress={() => [
+              updateTecido(quantidade, route.params.id),
+              estoqueMin != ''
+                ? addEstoqueMinimo(estoqueMin, route.params.id)
+                : addEstoqueMinimo(estoqueMin, route.params.id),
+            ]}>
+            <Text style={styles.btnText}>Salvar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      
     </SafeAreaView>
   );
 }
@@ -116,6 +138,25 @@ const styles = StyleSheet.create({
   textTitle2: {
     color: '#696969',
     fontSize: 25,
+    fontWeight: 'bold',
+  },
+  btnSalvar: {
+    borderWidth: 1,
+    borderColor: '#168fff',
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 10,
+    marginRight: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#168fff',
+    height: 50,
+    width: Dimensions.get('window').width / 3,
+  },
+  btnText: {
+    color: '#FFF',
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });

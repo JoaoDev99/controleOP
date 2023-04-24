@@ -46,12 +46,10 @@ export const AuthProvider = ({children}) => {
         },
 
         createSupplier: async (nome, tecido) => {
-          firestore()
-            .collection('fornecedores')
-            .add({
-              nome: nome,
-              tecido: tecido,
-            });
+          firestore().collection('fornecedores').add({
+            nome: nome,
+            tecido: tecido,
+          });
         },
 
         createTipoTecido: async (fornecedor, nome, tecido) => {
@@ -62,13 +60,22 @@ export const AuthProvider = ({children}) => {
           });
         },
 
-        createCaracteristicaRef: async (caracteristica) => {
+        createCaracteristicaRef: async caracteristica => {
           firestore().collection('caractRef').add({
             caracteristica: caracteristica,
           });
         },
 
-        createTecido: async (fornecedor, cor, codigo, tecido, quantidade, tipoMedida, tipoTecido, observacoes) => {
+        createTecido: async (
+          fornecedor,
+          cor,
+          codigo,
+          tecido,
+          quantidade,
+          tipoMedida,
+          tipoTecido,
+          observacoes,
+        ) => {
           firestore().collection('tecidos').add({
             fornecedor: fornecedor,
             cor: cor,
@@ -78,25 +85,37 @@ export const AuthProvider = ({children}) => {
             tipoMedida: tipoMedida,
             tipoTecido: tipoTecido,
             observacoes: observacoes,
+            estoqueMinimo: ''
           });
         },
 
-        removeTipoTecido: async (id) => {
+        updateTecido: async (quantidade, id) => {
+          firestore().collection('tecidos').doc(id).update({
+            quantidade: quantidade,
+          });
+        },
+
+        addEstoqueMinimo: async (estoqueMinimo, id) => {
+          firestore().collection('tecidos').doc(id).update({
+            estoqueMinimo: estoqueMinimo
+          });
+        },
+
+        removeTipoTecido: async id => {
           firestore().collection('tipoTecido').doc(id).delete();
         },
 
-        removeTecido: async (id) => {
+        removeTecido: async id => {
           firestore().collection('tecidos').doc(id).delete();
         },
 
-        removeCaracteristicaRef: async (id) => {
+        removeCaracteristicaRef: async id => {
           firestore().collection('caractRef').doc(id).delete();
         },
-        
-        removeSupplier: async (id) => {
+
+        removeSupplier: async id => {
           firestore().collection('fornecedores').doc(id).delete();
         },
-
       }}>
       {children}
     </AuthContext.Provider>

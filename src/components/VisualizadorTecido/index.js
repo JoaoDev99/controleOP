@@ -8,6 +8,7 @@ export default function VisualizarTecidos({data}) {
   const {removeTecido} = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false);
   const navigation = useNavigation();
+  const [codigo, setCodigo] = useState(data.codigo);
 
   const handleremoveTipoTecido = id => {
     removeTecido(id);
@@ -27,10 +28,11 @@ export default function VisualizarTecidos({data}) {
             tipoTecido: data.tipoTecido,
             quantidade: data.quantidade,
             tipoMedida: data.tipoMedida,
+            estoqueMinimo: data.estoqueMinimo
           })}>
           <View>
             <Text style={styles.title}>
-              Cor: {data.cor}, {data.codigo}
+              Cor: {data.cor}{codigo != '' ? ', '+ data.codigo : null}
             </Text>
             <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
             <Text style={styles.title}>
