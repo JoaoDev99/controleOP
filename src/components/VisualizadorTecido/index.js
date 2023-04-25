@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AuthContext} from '../../routes/AuthProvider';
 import {useNavigation} from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 export default function VisualizarTecidos({data}) {
   const {removeTecido} = useContext(AuthContext);
@@ -15,24 +16,39 @@ export default function VisualizarTecidos({data}) {
     setIsHidden(true);
   };
 
+  const handleDeleteConfirm = (id) => {
+    Alert.alert(
+      'Confirmação',
+      'Tem certeza que deseja excluir?',
+      [
+        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Excluir', onPress: () => handleremoveTipoTecido(id)},
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     !isHidden && (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('EstoqueMateriaisEditarTecidos', {
-            id: data.id,
-            cor: data.cor,
-            codigo: data.codigo,
-            fornecedor: data.fornecedor,
-            tecido: data.tecido,
-            tipoTecido: data.tipoTecido,
-            quantidade: data.quantidade,
-            tipoMedida: data.tipoMedida,
-            estoqueMinimo: data.estoqueMinimo
-          })}>
+          onPress={() =>
+            navigation.navigate('EstoqueMateriaisEditarTecidos', {
+              id: data.id,
+              cor: data.cor,
+              codigo: data.codigo,
+              fornecedor: data.fornecedor,
+              tecido: data.tecido,
+              tipoTecido: data.tipoTecido,
+              quantidade: data.quantidade,
+              tipoMedida: data.tipoMedida,
+              estoqueMinimo: data.estoqueMinimo,
+            })
+          }>
           <View>
             <Text style={styles.title}>
-              Cor: {data.cor}{codigo != '' ? ', '+ data.codigo : null}
+              Cor: {data.cor}
+              {codigo != '' ? ', ' + data.codigo : null}
             </Text>
             <Text style={styles.title}>Fornecedor: {data.fornecedor}</Text>
             <Text style={styles.title}>
@@ -46,7 +62,7 @@ export default function VisualizarTecidos({data}) {
         <View style={styles.buttons}>
           <TouchableOpacity
             style={styles.buttonConclusion}
-            onPress={() => handleremoveTipoTecido(data.id)}>
+            onPress={() => handleDeleteConfirm(data.id)}>
             <Icon name="trash-o" size={30} color={'#FFF'} />
           </TouchableOpacity>
         </View>

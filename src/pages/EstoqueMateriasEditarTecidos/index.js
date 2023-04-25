@@ -10,8 +10,11 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {PlusButton, MinusButton} from '../../components/ButtonsPlusAndMinus';
 import {AuthContext} from '../../routes/AuthProvider';
+import {useNavigation} from '@react-navigation/native';
 
 export default function EstoqueMateriasEditarTecidos({route}) {
+  const navigation = useNavigation();
+
   const [quantidade, setQuantidade] = useState(route.params.quantidade);
   const [estoqueMin, setEstoqueMin] = useState(route.params.estoqueMinimo);
 
@@ -64,6 +67,7 @@ export default function EstoqueMateriasEditarTecidos({route}) {
               estoqueMin != ''
                 ? addEstoqueMinimo(estoqueMin, route.params.id)
                 : addEstoqueMinimo(estoqueMin, route.params.id),
+            navigation.navigate('EstoqueMateriaisTecidos')
             ]}>
             <Text style={styles.btnText}>Salvar</Text>
           </TouchableOpacity>
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     color: '#696969',
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: 'bold',
   },
   textTitleQtd: {

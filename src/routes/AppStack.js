@@ -66,7 +66,7 @@ function MyDrawer() {
         name="HomeDrawer"
         component={Home}
         options={{
-          title: 'Ordem de Produção',
+          title: 'Home',
           headerStyle: {
             backgroundColor: '#FAFAFA',
           },

@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
   FlatList,
+  Alert,
 } from 'react-native';
 import {AuthContext} from '../../routes/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -14,7 +15,7 @@ import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorTecido';
 import CheckBox from '@react-native-community/checkbox';
 
-export default function EstoqueMateriasTecidos() {
+export default function EstoqueMateriasInsumos() {
   const {createTecido} = useContext(AuthContext);
 
   const [search, setSearch] = useState('');
@@ -130,7 +131,7 @@ export default function EstoqueMateriasTecidos() {
         });
         setData2(d);
         setList2(d);
-        //console.log(d);
+        console.log(d);
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -166,7 +167,7 @@ export default function EstoqueMateriasTecidos() {
         });
         setData(d);
         setList(d);
-        //console.log('Buscou2');
+        console.log('Buscou2');
       })
       .catch(e => {
         console.log('Erro, catch user' + e);
@@ -203,7 +204,7 @@ export default function EstoqueMateriasTecidos() {
           });
           setDataTecido(d);
           setDataReserva(d);
-          //console.log('Buscou');
+          console.log('Buscou');
         },
         error => {
           console.log('Erro, catch user' + error);
@@ -305,7 +306,6 @@ export default function EstoqueMateriasTecidos() {
             setFornecedor(''),
             setCor(''),
             setCodigo(''),
-            setQuantidade(''),
             setSelectedItem(''),
             setTipoTecido(''),
             setObservacoes(''),

@@ -45,11 +45,7 @@ export default function EstoqueHome() {
                 <Text style={styles.buttonSubTxt}>Gramatura</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.containerSubButtons3}>
-              <TouchableOpacity onPress={() => navigation.navigate('EstoqueReferenciasCaracteristicas')}>
-                <Text style={styles.buttonSubTxt}>Características</Text>
-              </TouchableOpacity>
-            </View>
+            
           </View>
         ) : null}
 
@@ -66,52 +62,23 @@ export default function EstoqueHome() {
         {estoqueClicked ? (
           <View>
             <View style={styles.containerSub2Buttons1}>
-              <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>Geral</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.containerSub2Buttons2}>
               <TouchableOpacity onPress={() => navigation.navigate('EstoqueMateriaisTecidos')}>
                 <Text style={styles.buttonSubTxt}>Tecidos</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.containerSub2Buttons3}>
+            <View style={styles.containerSub2Buttons2}>
               <TouchableOpacity>
                 <Text style={styles.buttonSubTxt}>Insumos</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        ) : null}
-
-        <TouchableOpacity
-          style={styles.containerButtons3}
-          onPress={() => [
-            setProdutosClicked(produtosClicked == true ? false : true),
-            setEstoqueClicked(false),
-            setRefClicked(false),
-          ]}>
-          <Text style={styles.buttonTxt}>ESTOQUE PRODUTOS</Text>
-        </TouchableOpacity>
-
-        {produtosClicked ? (
-          <View>
-            <View style={styles.containerSub3Buttons1}>
+            <View style={styles.containerSub2Buttons3}>
               <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>AAA</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.containerSub3Buttons2}>
-              <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>BBB</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.containerSub3Buttons3}>
-              <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>CCC</Text>
+                <Text style={styles.buttonSubTxt}>Produtos Finalizados</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : null}
+
       </ScrollView>
     </SafeAreaView>
   );
