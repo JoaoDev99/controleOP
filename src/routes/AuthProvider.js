@@ -85,7 +85,26 @@ export const AuthProvider = ({children}) => {
             tipoMedida: tipoMedida,
             tipoTecido: tipoTecido,
             observacoes: observacoes,
-            estoqueMinimo: ''
+            estoqueMinimo: '',
+          });
+        },
+
+        createInsumo: async (
+          produto,
+          fornecedor,
+          cor,
+          codigo,
+          quantidade,
+          observacoes,
+        ) => {
+          firestore().collection('insumos').add({
+            produto: produto,
+            fornecedor: fornecedor,
+            cor: cor,
+            codigo: codigo,
+            quantidade: quantidade,
+            observacoes: observacoes,
+            estoqueMinimo: '',
           });
         },
 
@@ -97,7 +116,7 @@ export const AuthProvider = ({children}) => {
 
         addEstoqueMinimo: async (estoqueMinimo, id) => {
           firestore().collection('tecidos').doc(id).update({
-            estoqueMinimo: estoqueMinimo
+            estoqueMinimo: estoqueMinimo,
           });
         },
 
@@ -107,6 +126,10 @@ export const AuthProvider = ({children}) => {
 
         removeTecido: async id => {
           firestore().collection('tecidos').doc(id).delete();
+        },
+
+        removeInsumo: async id => {
+          firestore().collection('insumos').doc(id).delete();
         },
 
         removeCaracteristicaRef: async id => {

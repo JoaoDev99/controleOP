@@ -6,27 +6,37 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  KeyboardAvoidingView, 
+  Platform 
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {PlusButton, MinusButton} from '../../components/ButtonsPlusAndMinus';
 import {AuthContext} from '../../routes/AuthProvider';
 import {useNavigation} from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EstoqueMateriasEditarTecidos({route}) {
   const navigation = useNavigation();
 
   const [quantidade, setQuantidade] = useState(route.params.quantidade);
+  const [quantidadeChange, setQuantidadeChange] = useState(1);
   const [estoqueMin, setEstoqueMin] = useState(route.params.estoqueMinimo);
 
   const {updateTecido} = useContext(AuthContext);
   const {addEstoqueMinimo} = useContext(AuthContext);
 
   const parseQuantidade = quantidade => {
-    return parseInt(quantidade, 10) || '';
+    const parsed = parseFloat(quantidade);
+    if (isNaN(parsed)) {
+      return '';
+    } else {
+      return parsed.toFixed(1);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
+    <ScrollView >
       <View style={styles.containerOP}>
         <Text style={styles.textTitle}>
           {route.params.fornecedor} - {route.params.tipoTecido}
@@ -38,28 +48,54 @@ export default function EstoqueMateriasEditarTecidos({route}) {
           )}
         </Text>
 
-        <View style={{flexDirection: 'row'}}></View>
-        <Text style={styles.textTitleQtd}>Quantidade:</Text>
-        <View style={{flexDirection: 'row'}}>
-          <PlusButton onPress={() => setQuantidade(state => state + 1)} />
-          <TextInput
-            style={styles.inputTextQtd}
-            onChangeText={t => setQuantidade(parseQuantidade(t))}>
-            {quantidade}
-          </TextInput>
-          <Text style={styles.inputTextQtd}>{route.params.tipoMedida}</Text>
-          <MinusButton onPress={() => setQuantidade(state => state - 1)} />
+        <View style={{marginTop: 20, marginBottom: 15, alignItems: 'center'}}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.inputTextQtd}>
+              {quantidade} {route.params.tipoMedida}
+            </Text>
+          </View>
         </View>
 
-        <Text style={styles.textTitleEstoque}>Estoque mínimo:</Text>
-        <View>
-          <TextInput
-            style={styles.inputTextEstoqueMin}
-            onChangeText={t => setEstoqueMin(parseQuantidade(t))}>
-            {estoqueMin}
-          </TextInput>
+        <View style={{alignItems: 'center', marginBottom: 10}}>
+          <Text style={styles.textTitleQtd}>Quantidade:</Text>
+          <View style={{flexDirection: 'row', marginBottom: 15}}>
+            <PlusButton
+              onPress={() =>
+                setQuantidade(
+                  state => parseFloat(state) + parseFloat(quantidadeChange),
+                )
+              }
+            />
+
+            <TextInput
+              style={styles.inputTextQtdChange}
+              onChangeText={t =>
+                setQuantidadeChange(parseQuantidade(t))
+              }></TextInput>
+
+            <MinusButton
+              onPress={() =>
+                setQuantidade(state =>
+                  parseFloat(state) - parseFloat(quantidadeChange) < 0
+                    ? 0
+                    : parseFloat(state) - parseFloat(quantidadeChange),
+                )
+              }
+            />
+          </View>
         </View>
-        <View>
+
+        <View style={{alignItems: 'center', marginBottom: 10}}>
+          <Text style={styles.textTitleEstoque}>Estoque mínimo:</Text>
+          <View>
+            <TextInput
+              style={styles.inputTextEstoqueMin}
+              onChangeText={t => setEstoqueMin(t)}>
+              {estoqueMin}
+            </TextInput>
+          </View>
+        </View>
+        <View style={{alignItems: 'center', marginBottom: 10}}>
           <TouchableOpacity
             style={styles.btnSalvar}
             onPress={() => [
@@ -67,12 +103,13 @@ export default function EstoqueMateriasEditarTecidos({route}) {
               estoqueMin != ''
                 ? addEstoqueMinimo(estoqueMin, route.params.id)
                 : addEstoqueMinimo(estoqueMin, route.params.id),
-            navigation.navigate('EstoqueMateriaisTecidos')
+              navigation.navigate('EstoqueMateriaisTecidos'),
             ]}>
             <Text style={styles.btnText}>Salvar</Text>
           </TouchableOpacity>
         </View>
       </View>
+    </ScrollView>
     </SafeAreaView>
   );
 }
@@ -104,11 +141,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 50,
     color: '#666',
-    width: Dimensions.get('window').width / 7,
+    width: Dimensions.get('window').width / 5,
     fontSize: 25,
     textAlign: 'center',
   },
   inputTextQtd: {
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    borderRadius: 5,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    color: '#666',
+    height: Dimensions.get('window').height / 8,
+    fontSize: 60,
+    textAlign: 'center',
+  },
+  inputTextQtdChange: {
+    borderWidth: 1,
+    borderColor: '#DFDFDF',
+    borderRadius: 5,
+    height: 50,
+    color: '#666',
+    minWidth: Dimensions.get('window').width / 5,
+    maxWidth: Dimensions.get('window').width / 1.8,
+    fontSize: 25,
+    textAlign: 'center',
+  },
+  inputTextMedida: {
     borderWidth: 1,
     borderColor: '#DFDFDF',
     borderRadius: 5,
@@ -150,7 +212,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     marginTop: 10,
-    marginRight: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

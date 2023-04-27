@@ -67,7 +67,7 @@ export default function EstoqueHome() {
               </TouchableOpacity>
             </View>
             <View style={styles.containerSub2Buttons2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('EstoqueMateriaisInsumos')}>
                 <Text style={styles.buttonSubTxt}>Insumos</Text>
               </TouchableOpacity>
             </View>

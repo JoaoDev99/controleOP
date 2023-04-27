@@ -18,6 +18,7 @@ import EstoqueRefereciasTecidos from '../pages/EstoqueReferenciasTecidos';
 import EstoqueRefereciasCaracteristicas from '../pages/EstoqueReferenciasCaracteristicas';
 import EstoqueMateriaisTecidos from '../pages/EstoqueMateriaisTecidos';
 import EstoqueMateriaisEditarTecidos from '../pages/EstoqueMateriasEditarTecidos'
+import EstoqueMateriaisInsumos from '../pages/EstoqueMateriaisInsumos';
 
 import {useContext} from 'react';
 
@@ -170,6 +171,14 @@ function MyStack() {
         component={EstoqueMateriaisTecidos}
         options={{
           title: 'Tecidos',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueMateriaisInsumos"
+        component={EstoqueMateriaisInsumos}
+        options={{
+          title: 'Insumos',
           headerShown: true,
         }}
       />

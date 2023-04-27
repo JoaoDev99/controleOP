@@ -14,6 +14,7 @@ import firestore from '@react-native-firebase/firestore';
 import VisualizarCores from '../../components/VisualizadorTecido';
 import CheckBox from '@react-native-community/checkbox';
 
+
 export default function EstoqueMateriasTecidos() {
   const {createTecido} = useContext(AuthContext);
 
@@ -174,7 +175,12 @@ export default function EstoqueMateriasTecidos() {
   };
 
   const parseQuantidade = quantidade => {
-    return parseInt(quantidade, 10);
+    const parsed = parseFloat(quantidade);
+    if (isNaN(parsed)) {
+      return '';
+    } else {
+      return parsed.toFixed(1);
+    }
   };
 
   const getTecidos = () => {
@@ -345,6 +351,7 @@ export default function EstoqueMateriasTecidos() {
           }}>
           <FlatList
             data={data}
+            nestedScrollEnabled={true}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -416,6 +423,7 @@ export default function EstoqueMateriasTecidos() {
           }}>
           <FlatList
             data={data2}
+            nestedScrollEnabled={true}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -508,9 +516,9 @@ export default function EstoqueMateriasTecidos() {
           />
           <View
             style={{
-              maxHeight: Dimensions.get('window').width * 1.3,
-            }}>
+              maxHeight: Dimensions.get('window').height / 1.5            }}>
             <FlatList
+             nestedScrollEnabled={true}
               data={dataTecido}
               keyExtractor={item => item.id}
               renderItem={({item}) => <VisualizarCores data={item} />}
@@ -521,9 +529,7 @@ export default function EstoqueMateriasTecidos() {
     </View>
   );
 
-  return (
-    <SafeAreaView style={styles.container}>{RenderPageCor()}</SafeAreaView>
-  );
+  return <SafeAreaView style={styles.container}>{RenderPageCor()}</SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
@@ -533,6 +539,7 @@ const styles = StyleSheet.create({
     paddingEnd: 14,
     paddingStart: 14,
     paddingTop: 14,
+    height: '100%',
   },
   containerAdd: {
     backgroundColor: '#FAFAFA',
