@@ -56,7 +56,7 @@ export default function EstoqueHome() {
             setProdutosClicked(false),
             setRefClicked(false),
           ]}>
-          <Text style={styles.buttonTxt}>ESTOQUE MATERIAIS</Text>
+          <Text style={styles.buttonTxt}>ESTOQUE</Text>
         </TouchableOpacity>
 
         {estoqueClicked ? (
@@ -72,8 +72,8 @@ export default function EstoqueHome() {
               </TouchableOpacity>
             </View>
             <View style={styles.containerSub2Buttons3}>
-              <TouchableOpacity>
-                <Text style={styles.buttonSubTxt}>Produtos Finalizados</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('EstoqueMateriaisTelasSilk')}>
+                <Text style={styles.buttonSubTxt}>Telas de Silk</Text>
               </TouchableOpacity>
             </View>
           </View>

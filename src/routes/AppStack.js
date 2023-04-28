@@ -19,6 +19,7 @@ import EstoqueRefereciasCaracteristicas from '../pages/EstoqueReferenciasCaracte
 import EstoqueMateriaisTecidos from '../pages/EstoqueMateriaisTecidos';
 import EstoqueMateriaisEditarTecidos from '../pages/EstoqueMateriasEditarTecidos'
 import EstoqueMateriaisInsumos from '../pages/EstoqueMateriaisInsumos';
+import EstoqueMateriaisTelasSilk from '../pages/EstoqueMateriasTelasSilk';
 
 import {useContext} from 'react';
 
@@ -187,6 +188,14 @@ function MyStack() {
         component={EstoqueMateriaisEditarTecidos}
         options={{
           title: 'Editar Tecidos',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="EstoqueMateriaisTelasSilk"
+        component={EstoqueMateriaisTelasSilk}
+        options={{
+          title: 'Telas de silk',
           headerShown: true,
         }}
       />
